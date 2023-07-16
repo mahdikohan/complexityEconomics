@@ -21,13 +21,26 @@ One example of a problem studied in complexity economics is the **El Farol Bar p
 
 The El Farol Bar problem is a problem in game theory where a fixed population wants to go to the El Farol Bar every Thursday night, unless it's too crowded. If less than 60% of the population goes to the bar, they'll all have more fun than if they stayed home. If more than 60% of the population goes to the bar, they'll all have less fun than if they stayed home. Everyone must decide at the same time whether to go or not, with no knowledge of others' choices [5]. This problem is a popular paradigm of complex economic systems in which agents self-organize themselves while they are in competition for a limited resource, without possibility of communication [6].
 
-## Institutions of New Economic Thinking
+# Institutions of New Economic Thinking
 
 There are several institutions dedicated to promoting new economic thinking, including:
 
 - The **Institute for New Economic Thinking (INET)**: A New York City-based nonprofit think tank founded in October 2009 as a result of the 2007–2012 global financial crisis. It runs a variety of affiliated programs at major universities such as the Cambridge-INET Institute at the University of Cambridge [7].
 - The **Institute for New Economic Thinking at the Oxford Martin School (INET Oxford)**: A multidisciplinary research institute dedicated to applying leading-edge thinking from the social and physical sciences to global economic challenges [8].
 
+# Mathematical base requirements
+Complexity economics is an interdisciplinary field that draws on a wide range of mathematical and computational tools. Some of the mathematical base requirements for studying complexity economics may include:
+
+- **Nonlinear dynamics and chaos theory**: These fields study how complex behavior can arise from simple systems, and are often used to model economic phenomena such as business cycles and financial market dynamics ¹.
+- **Network theory**: This field studies how complex systems can be represented as networks of interconnected nodes, and is often used to model economic phenomena such as trade networks and financial contagion ².
+- **Agent-based modeling**: This is a computational approach to modeling complex systems, where individual agents are simulated and their interactions are used to study the emergent behavior of the system as a whole. Agent-based models are often used to study economic phenomena such as market dynamics and the emergence of institutions ³.
+
+These are just some examples of the mathematical base requirements for studying complexity economics. The field is constantly evolving, and new tools and techniques are being developed all the time. A strong foundation in mathematics, computer science, and programming can be very helpful for anyone interested in studying complexity economics.
+
+Source: Conversation with Bing, 7/16/2023
+(1) Complexity economics - Wikipedia. https://en.wikipedia.org/wiki/Complexity_economics.
+(2) Complex Systems in Economics and Where to Find Them. https://link.springer.com/article/10.1007/s11424-020-9149-1.
+(3) Foundations and Applications of Complexity Economics. https://link.springer.com/book/10.1007/978-3-030-70668-5.
 ## References
 
 [1] Complexity economics - Wikipedia. https://en.wikipedia.org/wiki/Complexity_economics.
