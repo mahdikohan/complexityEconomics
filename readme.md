@@ -1,5 +1,8 @@
 # About Me
-Hi, I'm Mahdi Kohan Sefidi and I have a Master's degree in economics. I am interested in complexity economics and computer simulations. Now, I would like to share some information about this subject and present some interesting things about it. Let's explore this together, guys! 😊
+Hi, I'm **Mahdi Kohan Sefidi** and I have a Master's degree in economics. I am interested in complexity economics and computer simulations. Now, I would like to share some information about this subject and present some interesting things about it. Let's explore this together, guys! 😊
+
+contact with me:
+mail address: kohansefidimahdi@gmail.com
 
 Now about ...
 # Complexity Economics
