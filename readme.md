@@ -1,3 +1,9 @@
+# About Me
+Here is a grammatically corrected version of the text:
+
+"Hi, I'm Mahdi Kohan Sefidi and I have a Master's degree in economics. I am interested in complexity economics and computer simulations. Now, I would like to share some information about this subject and present some interesting things about it. Let's explore this together, guys! 😊"
+
+Now about ...
 # Complexity Economics
 
 Complexity economics is the application of complexity science to the problems of economics. It relaxes several common assumptions in economics, including general equilibrium theory. While it does not reject the existence of an equilibrium, it sees such equilibria as "a special case of nonequilibrium", and as an emergent property resulting from complex interactions between economic agents [1].
