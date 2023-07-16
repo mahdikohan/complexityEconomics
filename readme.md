@@ -1,7 +1,5 @@
 # About Me
-Here is a grammatically corrected version of the text:
-
-"Hi, I'm Mahdi Kohan Sefidi and I have a Master's degree in economics. I am interested in complexity economics and computer simulations. Now, I would like to share some information about this subject and present some interesting things about it. Let's explore this together, guys! 😊"
+Hi, I'm Mahdi Kohan Sefidi and I have a Master's degree in economics. I am interested in complexity economics and computer simulations. Now, I would like to share some information about this subject and present some interesting things about it. Let's explore this together, guys! 😊
 
 Now about ...
 # Complexity Economics
