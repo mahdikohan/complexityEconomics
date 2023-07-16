@@ -5,7 +5,7 @@ Hi, I'm **Mahdi Kohan Sefidi** and I have a Master's degree in **Economics**. I 
 **“I think the next century will be the century of complexity,”** said the well-known Cambridge professor Stephan Hawking in an interview with San Jose Mercury News in January 2000.
 
 <p align="center">
-  <img src="[https://i.imgur.com/4AiXzf8.jpg](https://upload.wikimedia.org/wikipedia/commons/5/5b/Lorenz_attractor_yb.svg)" alt="Lorenz attractor" width="200">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/5/5b/Lorenz_attractor_yb.svg" alt="Lorenz attractor" width="200">
 </p>
 
 contact with me
