@@ -21,8 +21,7 @@ One example of a problem studied in complexity economics is the **El Farol Bar p
 
 The El Farol Bar problem is a problem in game theory where a fixed population wants to go to the El Farol Bar every Thursday night, unless it's too crowded. If less than 60% of the population goes to the bar, they'll all have more fun than if they stayed home. If more than 60% of the population goes to the bar, they'll all have less fun than if they stayed home. Everyone must decide at the same time whether to go or not, with no knowledge of others' choices [5]. This problem is a popular paradigm of complex economic systems in which agents self-organize themselves while they are in competition for a limited resource, without possibility of communication [6].
 
-# Mathematical Base Requirements of Complexity Economics
-
+## Mathematical Base
 Complexity economics is an interdisciplinary field that draws on a wide range of mathematical and computational tools. Some of the mathematical base requirements for studying complexity economics may include:
 
 - **Nonlinear dynamics and chaos theory**: These fields study how complex behavior can arise from simple systems, and are often used to model economic phenomena such as business cycles and financial market dynamics.
