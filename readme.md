@@ -8,9 +8,7 @@ Hi, I'm **Mahdi Kohan Sefidi** and I have a Master's degree in **Economics**. I 
   <img src="https://upload.wikimedia.org/wikipedia/commons/5/5b/Lorenz_attractor_yb.svg" alt="Lorenz attractor" width="200">
 </p>
 
-contact with me
-
-mail address: kohansefidimahdi@gmail.com
+contact with me kohansefidimahdi@gmail.com
 
 Now about ...
 # Complexity Economics
