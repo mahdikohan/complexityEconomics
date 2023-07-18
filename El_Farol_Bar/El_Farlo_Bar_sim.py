@@ -1,4 +1,5 @@
 import matplotlib.pyplot
+import random
 
 
 ## initial input variables for run simulaion
@@ -20,7 +21,7 @@ class strategy:
         self.numberOfWeeks:int = strategyId
         self.history:list = history
     
-    def result():
+    def result(self):
         return 0
 
 class person:
@@ -29,26 +30,53 @@ class person:
         self.decision:bool
         self.attendance:int = attendence
 
-    def getStrategy()->int:
+    def getStrategy(self)->int:
         n = 100
         return n
 
-    def takeDecision():
-
-        return 0
+    def takeDecision(self):
+        forecastAttendence = 50
+        return forecastAttendence
 
 class bar:
     def __init__(self) -> None:
         self.totalCap:int
-        self.members:int
+        self.members:list[person]
 
 
 
 
-
-def selectRandom():
-    return 0
 
 
 if __name__ == '__main__':
-    print('hi')
+
+    print("""Running simualtion with init parameters 
+          number_of_people={number_of_people},
+          attendency={attendency},
+          number_of_strategy={number_of_strategy},
+          ticks={ticks}
+          """)
+    
+    # generate random numbers between [60,100)
+    init_people = (random.random() * 40) + 60
+    init_tick = ticks
+
+    people = list[person]
+    # start simulation
+    if ticks > 0:
+        if init_tick == ticks:
+
+            i = 0
+            while i<init_people:
+                born = person(history=[]
+                              ,strategyId = random.random() * number_of_strategy
+                              ,attendence = attendency)
+                
+                people.append(born)
+                i = i+1
+
+        
+        ticks = ticks - 1
+
+
+
