@@ -2,16 +2,20 @@ import matplotlib.pyplot
 import random
 
 
-## initial input variables for run simulaion
 
-# this var show total number of our society
+
+## Initial input variables for run simulaion
+
+# This var show total number of our society
 number_of_people = 100
-# this var shows pleasable attendency in bar
+# This var shows pleasable attendency in bar
 attendency = 60
-# this var determine distinct number strategy that each person can have 
+# This var determine distinct number strategy that each person can have 
 number_of_strategy = 5
-# this var gives number of execusion of model in simulation
+# This var gives number of execusion of model in simulation
 ticks = 1000
+
+
 
 
 
@@ -24,19 +28,42 @@ class strategy:
     def result(self):
         return 0
 
-class person:
-    def __init__(self, history:list[int], strategyId, attendence) -> None:
-        self.strategy:strategy = strategy(strategyId, history)
-        self.decision:bool
-        self.attendance:int = attendence
 
-    def getStrategy(self)->int:
-        n = 100
-        return n
+
+
+
+class person:
+    def __init__(self) -> None:
+        self.history:list
+        self.strategy:strategy
+        self.decision:bool
+        self.attendance:int
+
+    def __getStrategy(self)->int:
+        if len(self.history) < self.strategy:
+            return True
+        else:
+            last_strategy = history[-self.strategy:]
+            predicted = sum(last_strategy) / len(last_strategy)
+            return predicted < self.attendance
+            
+    
+    def putHistory(self, history:list):
+        self.history = history
+    
+    def appendHistory(self, attendanceCount:int):
+        self.history.append(attendanceCount)
+    
+    def updateHistory(self, index:int, value:int):
+        self.history[index] = value
 
     def takeDecision(self):
-        forecastAttendence = 50
+        forecastAttendence = self.__getStrategy()
         return forecastAttendence
+
+
+
+
 
 class bar:
     def __init__(self) -> None:
@@ -48,35 +75,53 @@ class bar:
 
 
 
+
+
 if __name__ == '__main__':
 
-    print("""Running simualtion with init parameters 
-          number_of_people={number_of_people},
-          attendency={attendency},
-          number_of_strategy={number_of_strategy},
-          ticks={ticks}
-          """)
+    print(f"""Running simualtion with init parameters \nnumber_of_people\t={number_of_people}\nattendency\t\t={attendency}\nnumber_of_strategy\t={number_of_strategy}\nticks\t\t\t={ticks}""")
+
+    people = []
+    i = 0
+    while i < number_of_people:
+         borned = person(history=[],strategyId = random.random() * number_of_strategy,attendence = attendency)
+         people.append(borned)
+         i = i + 1
     
-    # generate random numbers between [60,100)
-    init_people = (random.random() * 40) + 60
+    # Start simulation
     init_tick = ticks
 
-    people = list[person]
-    # start simulation
-    if ticks > 0:
-        if init_tick == ticks:
+    while init_tick-ticks < init_tick:
+        history = []
 
-            i = 0
-            while i<init_people:
-                born = person(history=[]
-                              ,strategyId = random.random() * number_of_strategy
-                              ,attendence = attendency)
-                
-                people.append(born)
-                i = i+1
+        if init_tick-ticks==0:
+            # init first history
+            history.append(100)
+
+            for p in people:
+                p.putHistory(history)
+                p.takeDecision
+
+            continue
 
         
+        
+
+        # # This part check that is first tick
+        # if init_tick == ticks:
+        #     history = [ticks*0]
+        #     i = 0
+        #     while i < init_people:
+        #         history[0] = init_people
+        #         i = i + 1
+
+        # # This part check that is second tick
+        # if init_tick - 1 == ticks:
+
+        #     i = number_of_people - init_people
+        #     while i < number_of_people:
+        #         history[1] = number_of_people - init_people
+        #         i = i + 1
+            
+        
         ticks = ticks - 1
-
-
-
