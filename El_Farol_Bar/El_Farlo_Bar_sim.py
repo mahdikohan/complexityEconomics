@@ -1,6 +1,6 @@
-import matplotlib.pyplot
+import matplotlib.pyplot as plt
 import random
-
+import json
 
 
 
@@ -8,12 +8,12 @@ import random
 
 # This var show total number of our society
 number_of_people = 100
-# This var shows pleasable attendency in bar
-attendency = 60
+# This var shows pleasable attendance in bar
+attendance = 60
 # This var determine distinct number strategy that each person can have 
 number_of_strategy = 5
 # This var gives number of execusion of model in simulation
-ticks = 1000
+ticks = 10000
 
 
 
@@ -21,33 +21,28 @@ ticks = 1000
 
 # Defined each identities
 class strategy:
-    def __init__(self, strategyId, history) -> None:
-        self.numberOfWeeks:int = strategyId
-        self.history:list = history
-    
-    def result(self):
-        return 0
+    def __init__(self, strategyId) -> None:
+        self.strategyId:int = strategyId
 
 
 
 
 
 class person:
-    def __init__(self) -> None:
-        self.history:list
-        self.strategy:strategy
-        self.decision:bool
-        self.attendance:int
+    def __init__(self, history, strategy, decision, attendance) -> None:
+        self.history:list = history
+        self.strategy:strategy = strategy
+        self.decision:bool = decision
+        self.attendance:int = attendance
 
     def __getStrategy(self)->int:
-        if len(self.history) < self.strategy:
+        if len(self.history) < self.strategy.strategyId:
             return True
         else:
-            last_strategy = history[-self.strategy:]
+            last_strategy = self.history[-self.strategy.strategyId:]
             predicted = sum(last_strategy) / len(last_strategy)
             return predicted < self.attendance
             
-    
     def putHistory(self, history:list):
         self.history = history
     
@@ -58,8 +53,11 @@ class person:
         self.history[index] = value
 
     def takeDecision(self):
-        forecastAttendence = self.__getStrategy()
-        return forecastAttendence
+        forecastAttendance = self.__getStrategy()
+        return forecastAttendance
+    
+    def toJSON(self):
+        return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
 
 
 
@@ -74,17 +72,19 @@ class bar:
 
 
 
-
-
-
 if __name__ == '__main__':
 
-    print(f"""Running simualtion with init parameters \nnumber_of_people\t={number_of_people}\nattendency\t\t={attendency}\nnumber_of_strategy\t={number_of_strategy}\nticks\t\t\t={ticks}""")
-
+    print(f"""Running simualtion with init parameters \nnumber_of_people\t={number_of_people}\nattendency\t\t={attendance}\nnumber_of_strategy\t={number_of_strategy}\nticks\t\t\t={ticks}""")
     people = []
+    result_of_sim = []
     i = 0
     while i < number_of_people:
-         borned = person(history=[],strategyId = random.random() * number_of_strategy,attendence = attendency)
+         borned = person(history=[],
+                         strategy= strategy(random.randrange(1,
+                                                             number_of_strategy + 1,
+                                                             1)),
+                         attendance = attendance,
+                         decision=True)
          people.append(borned)
          i = i + 1
     
@@ -94,34 +94,28 @@ if __name__ == '__main__':
     while init_tick-ticks < init_tick:
         history = []
 
-        if init_tick-ticks==0:
-            # init first history
-            history.append(100)
+        attendanceCounter = 0
+        tempAttendancePersonIndexes = []
 
-            for p in people:
-                p.putHistory(history)
-                p.takeDecision
-
-            continue
-
+        for j, p in enumerate(people):
+            if p.takeDecision():
+                attendanceCounter = attendanceCounter + 1
+                tempAttendancePersonIndexes.append(j)
+            else:
+                p.appendHistory(0)
         
+        for k in tempAttendancePersonIndexes:
+            people[k].appendHistory(attendanceCounter)
         
-
-        # # This part check that is first tick
-        # if init_tick == ticks:
-        #     history = [ticks*0]
-        #     i = 0
-        #     while i < init_people:
-        #         history[0] = init_people
-        #         i = i + 1
-
-        # # This part check that is second tick
-        # if init_tick - 1 == ticks:
-
-        #     i = number_of_people - init_people
-        #     while i < number_of_people:
-        #         history[1] = number_of_people - init_people
-        #         i = i + 1
-            
-        
+        result  = len(tempAttendancePersonIndexes)
+        result_of_sim.append(result)
+        # print(result)
         ticks = ticks - 1
+    
+    plt.plot(result_of_sim)
+    plt.show()
+    # for p in people:
+    #     print(p.toJSON())
+
+
+
