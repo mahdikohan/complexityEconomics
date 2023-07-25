@@ -35,11 +35,13 @@ class strategy:
 
 
 class person:
-    def __init__(self, history, strategy, decision, attendance) -> None:
+    def __init__(self, history, strategy, decision, attendance, shortMemory, longMemory) -> None:
         self.history:list = history
         self.strategy:strategy = strategy
         self.decision:bool = decision
         self.attendance:int = attendance
+        self.shortMemory:list = shortMemory
+        self.longMemory:list = longMemory
 
     def __getStrategy(self)->int:
         last_strategy = list(map(weight,self.history[-self.strategy.strategyId:]))
