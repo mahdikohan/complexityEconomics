@@ -30,6 +30,10 @@ class longMemory:
 
 
 
+# for generate permutation of a list 
+# random.sample(l,10)
+# where l is a array and 10 number of element in each sample
+
 # Defined each identities
 def getStrategy():
     strategy = set()
