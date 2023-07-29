@@ -2,6 +2,8 @@ import matplotlib.pyplot as plt
 import random
 import json
 import pandas as pd 
+from itertools import permutations
+
 
 
 ## Initial input variables for run simulaion
@@ -15,7 +17,7 @@ number_of_strategy = 5
 # This var gives number of execusion of model in simulation
 ticks = 50
 # This var shows length of long memory
-length_of_long_memory = 3
+length_of_long_memory = 4
 
     
 
@@ -30,20 +32,30 @@ class longMemory:
 
 
 
+
+
 # for generate permutation of a list 
 # random.sample(l,10)
 # where l is a array and 10 number of element in each sample
 
 # Defined each identities
 def getStrategy():
+    allStates = length_of_long_memory*[0]+length_of_long_memory*[1]
     strategy = set()
     while True:
-        strategy.add((tuple([random.randrange(0,2,1) for i in range(0,length_of_long_memory)]),
-                      random.choice([-1,1])))
+        strategy.add((tuple(random.sample(allStates,length_of_long_memory))))
         if len(strategy) == 2**length_of_long_memory:
             break
+    lstrategy = list(strategy)
+    history = random.sample(lstrategy,len(lstrategy))
+
+    result=[]
+
+    for l in history:
+        result.append([l,random.choice([1,-1])])
     
-    return list(strategy)
+    print(result)
+    return result
 
 
 
