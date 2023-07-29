@@ -1,12 +1,11 @@
 import matplotlib.pyplot as plt
 import random
 import json
-import pandas as pd 
-from itertools import permutations
+import pandas as pd
 
 
 
-## Initial input variables for run simulaion
+### Initial input variables for run simulaion
 
 # This var show total number of our society
 number_of_people = 5
@@ -15,9 +14,9 @@ attendance = 80
 # This var determine distinct number strategy that each person can have 
 number_of_strategy = 5
 # This var gives number of execusion of model in simulation
-ticks = 50
+ticks = 2
 # This var shows length of long memory
-length_of_long_memory = 5
+length_of_long_memory = 3
 
     
 
@@ -33,13 +32,12 @@ class longMemory:
 
 
 
-
 class person:
     def __init__(self, decision, attendance) -> None:
         self.strategies:list
         self.decision:bool = decision
         self.attendance:int = attendance
-        self.shortMemory:list = length_of_long_memory*[0]
+        self.shortMemory:list = [random.randrange(0,2,1) for i in range(0,length_of_long_memory)]
         self.longMemory:list
 
 
@@ -51,38 +49,59 @@ class person:
             if len(strategy) == 2**length_of_long_memory:
                 break
         lstrategy = list(strategy)
-        history = random.sample(lstrategy,len(lstrategy))
+        # history = random.sample(lstrategy,len(lstrategy))
+        history = lstrategy
         strategy_without_reward=[]
         for l in history:
             strategy_without_reward.append([l,random.choice([1,-1])])
         strategy_with_reward = [strategy_without_reward,0]
         return strategy_with_reward
-    
+
 
     def __lookupStrategy(self, value):
-        pass
-    
+        address = []
+        for id,strategy in enumerate(self.strategies):
+            for row,hist in enumerate(strategy[0]):
+                if hist[0] == tuple(value):
+                    address.append([id,row,strategy[1]])
+        return address
 
-    def __refreshShortMemory(self) -> None:
-        self.shortMemory = [random.randrange(0,2,1) for i in range(0,length_of_long_memory)]
 
 
     def takeDecision(self):
-        self.__refreshShortMemory()
         self.strategies = [self.__getStrategy() for i in range(0,number_of_strategy)]
+        lookup_result = self.__lookupStrategy(self.shortMemory)
+        df_lookup_result = pd.DataFrame(lookup_result,columns=['strg','rfound','score'])
+        max_score = df_lookup_result.loc[df_lookup_result['score'].idxmax()]
+        result = {
+                        'strategyId':max_score['strg'],
+                        'score': max_score['score'],
+                        'rowIdFound': max_score['rfound']
+                   }
+        
+        self.decision = result
 
-        return 1
+        print(pd.DataFrame(lookup_result,columns=['strg','rfound','score']))
+        print(self.decision)
+        print("")
+
+        return self.decision
     
+
+
+    def getScore(self):
+        pass
+    
+
 
     def makeDFstrategy(self):
         self.dfStrategies = [pd.DataFrame(self.strategies[i][0]) for i in range(0,number_of_strategy)]
         print('df generated')
     
 
+
     def toJSON(self):
         return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
-
-
 
 
 
@@ -111,15 +130,22 @@ if __name__ == '__main__':
         borned = person(attendance = attendance,
                         decision=True)
         people.append(borned)
+
+        # borned.makeDFstrategy()
+        # for p in borned.dfStrategies:
+        #     print(p)
         i = i + 1
-        
-        borned.takeDecision()
-        borned.makeDFstrategy()
-        for p in borned.dfStrategies:
-            print(p)
-    
+
+
+
     # Start simulation
-    # init_tick = ticks
+    init_tick = ticks
+
+    while init_tick-ticks < init_tick:
+        for agent in people:
+            agent.takeDecision()
+            
+        ticks = ticks - 1
 
     # while init_tick-ticks < init_tick:
     #     history = []
