@@ -10,7 +10,7 @@ import pandas as pd
 # This var show total number of our society
 number_of_people = 100
 # This var shows pleasable attendance in bar
-attendance = 20
+attendance = 30
 # This var determine distinct number strategy that each person can have 
 number_of_strategy = 5
 # This var gives number of execusion of model in simulation
@@ -55,8 +55,12 @@ class person:
 
 
 
-    def takeDecision(self):
+    def init_strategies(self):
         self.strategies = [self.__getStrategy() for i in range(0,number_of_strategy)]
+
+
+    def takeDecision(self):
+        
         lookup_result = self.__lookupStrategy(self.shortMemory)
         df_lookup_result = pd.DataFrame(lookup_result,columns=['strg','rfound','score'])
         max_score = df_lookup_result.loc[df_lookup_result['score'].idxmax()]
@@ -121,6 +125,7 @@ if __name__ == '__main__':
     i = 0
     while i < number_of_people:
         borned = person()
+        borned.init_strategies()
         people.append(borned)
         i = i + 1
 
@@ -130,7 +135,7 @@ if __name__ == '__main__':
     init_tick = ticks
 
     
-
+    simulation = []
     while init_tick-ticks < init_tick:
         gone = 0
         A_t = 0
@@ -163,7 +168,8 @@ if __name__ == '__main__':
             
             
 
-        print(f"gone number :{gone}")
+        # print(f"gone number :{gone}")
+        simulation.append(gone)
 
         # stay [-1], go [1] are desired point
         
@@ -194,8 +200,8 @@ if __name__ == '__main__':
     #         for p in people:
     #             print(p.history)
     
-    # plt.plot(result_of_sim)
-    # plt.show()
+    plt.plot(simulation)
+    plt.show()
 
     # for p in people:
     #     print(p.toJSON())
