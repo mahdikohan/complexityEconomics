@@ -17,7 +17,7 @@ number_of_strategy = 5
 # This var gives number of execusion of model in simulation
 ticks = 50
 # This var shows length of long memory
-length_of_long_memory = 3
+length_of_long_memory = 5
 
     
 
@@ -34,60 +34,51 @@ class longMemory:
 
 
 
-# for generate permutation of a list 
-# random.sample(l,10)
-# where l is a array and 10 number of element in each sample
-
-# Defined each identities
-def getStrategy():
-    allStates = length_of_long_memory*[0]+length_of_long_memory*[1]
-    strategy = set()
-    while True:
-        strategy.add((tuple(random.sample(allStates,length_of_long_memory))))
-        if len(strategy) == 2**length_of_long_memory:
-            break
-    lstrategy = list(strategy)
-    history = random.sample(lstrategy,len(lstrategy))
-
-    result=[]
-
-    for l in history:
-        result.append([l,random.choice([1,-1])])
-    
-    return result
-
-
-
-
-
-
-
-
 class person:
-    def __init__(self, strategy, decision, attendance) -> None:
-        self.strategy:list = strategy
-        self.dfStrategies = []
+    def __init__(self, decision, attendance) -> None:
+        self.strategies:list
         self.decision:bool = decision
         self.attendance:int = attendance
-        self.shortMemory:list = [0,0,0]
+        self.shortMemory:list = length_of_long_memory*[0]
         self.longMemory:list
 
-    def __getStrategy(self)->int:
-        last_strategy = list(map(weight,self.history[-self.strategy.strategyId:]))
-        predicted = sum(last_strategy)
-        return predicted < self.attendance
-            
-    def takeDecision(self):
-        forecastAttendance = self.__getStrategy()
-        return forecastAttendance
+
+    def __getStrategy(self)->list:
+        allStates = length_of_long_memory*[0]+length_of_long_memory*[1]
+        strategy = set()
+        while True:
+            strategy.add((tuple(random.sample(allStates,length_of_long_memory))))
+            if len(strategy) == 2**length_of_long_memory:
+                break
+        lstrategy = list(strategy)
+        history = random.sample(lstrategy,len(lstrategy))
+        strategy_without_reward=[]
+        for l in history:
+            strategy_without_reward.append([l,random.choice([1,-1])])
+        strategy_with_reward = [strategy_without_reward,0]
+        return strategy_with_reward
     
-    def refreshShortMemory(self) -> None:
-        self.shortMemory = [random.randrange(0,2,1) for i in range(1,4)]
+
+    def __lookupStrategy(self, value):
+        pass
+    
+
+    def __refreshShortMemory(self) -> None:
+        self.shortMemory = [random.randrange(0,2,1) for i in range(0,length_of_long_memory)]
+
+
+    def takeDecision(self):
+        self.__refreshShortMemory()
+        self.strategies = [self.__getStrategy() for i in range(0,number_of_strategy)]
+
+        return 1
+    
 
     def makeDFstrategy(self):
-        self.dfStrategies = [pd.DataFrame(self.strategy[i]) for i in range(0,number_of_strategy)]
+        self.dfStrategies = [pd.DataFrame(self.strategies[i][0]) for i in range(0,number_of_strategy)]
         print('df generated')
     
+
     def toJSON(self):
         return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
 
@@ -117,12 +108,12 @@ if __name__ == '__main__':
         #                                                     1)),
         #                 attendance = attendance,
         #                 decision=True)
-        borned = person(strategy =[getStrategy() for i in range(0,number_of_strategy)],
-                        attendance = attendance,
+        borned = person(attendance = attendance,
                         decision=True)
         people.append(borned)
         i = i + 1
-
+        
+        borned.takeDecision()
         borned.makeDFstrategy()
         for p in borned.dfStrategies:
             print(p)
