@@ -9,7 +9,7 @@ from itertools import permutations
 ## Initial input variables for run simulaion
 
 # This var show total number of our society
-number_of_people = 1
+number_of_people = 5
 # This var shows pleasable attendance in bar
 attendance = 80
 # This var determine distinct number strategy that each person can have 
@@ -17,7 +17,7 @@ number_of_strategy = 5
 # This var gives number of execusion of model in simulation
 ticks = 50
 # This var shows length of long memory
-length_of_long_memory = 4
+length_of_long_memory = 3
 
     
 
@@ -54,7 +54,6 @@ def getStrategy():
     for l in history:
         result.append([l,random.choice([1,-1])])
     
-    print(result)
     return result
 
 
