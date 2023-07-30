@@ -21,12 +21,16 @@ To solve the El Farol problem, we used a computer engineering method published b
 - **Memory**: number of recent outcomes
 - **Strategy**: decision strategy (defined to simulate randomness in decision and long memory optimizer)
 
-
+The mechanism by which a person makes a decision is shown in Figure 2.
 <p align="center">
     <img src="https://github.com/mahdikohan/complexityEconomics/blob/5beb05ee5fea4fdd3d8d2f061171863a378eb85c/El_Farol_Bar/images/fig2.PNG" alt="Dynamic model" width="600">
 </p>
 <p align="center">Figure 2: Minority game model of an agent playing the game.</p>
-
+In summary, we can write some equations that are used to simulate the dynamic model:
+$$
+x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}
+$$
+For more information, you can refer to the main documentation that we used .
 ## References
 
 [1] Arthur, W. Brian. “Inductive Reasoning and Bounded Rationality.” The American Economic Review 84, no. 2 (1994): 406–11. http://www.jstor.org/stable/2117868.
