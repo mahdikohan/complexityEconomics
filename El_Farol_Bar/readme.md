@@ -30,6 +30,10 @@ The mechanism by which a person makes a decision is shown in Figure 2.
 In summary, we can write some equations that are used to simulate the dynamic model:
 
 $$
+$$a_i(t) = \begin{cases} -1 & \text{stay home} \\\\ 1 & \text{go bar} \end{cases}$$
+$$
+
+$$
 x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}
 $$
 
@@ -38,4 +42,4 @@ For more information, you can refer to the main documentation that we used .
 ## References
 
 [1] Arthur, W. Brian. “Inductive Reasoning and Bounded Rationality.” The American Economic Review 84, no. 2 (1994): 406–11. http://www.jstor.org/stable/2117868.
-[2] https://www.ece.rutgers.edu/~marsic/books/SE/projects/MinorityGame/ElFarolBar.pdf
+[2] https://www.ece.rutgers.edu/~marsic/books/SE/projects/MinorityGame/ElFarolBar.pdf.
