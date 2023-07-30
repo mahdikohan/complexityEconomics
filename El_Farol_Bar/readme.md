@@ -33,6 +33,12 @@ $$
 a_i(t) = \begin{cases} -1 & \text{stay home} \\\\ 1 & \text{go bar} \end{cases}$$
 $$
 
+
+$$
+A(t) = sum_{j=1}^{N} {a_{j}(t)}$$
+$$
+
+
 $$
 x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}
 $$
