@@ -50,7 +50,7 @@ $$
 
 
 $$
-x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}
+\sigma_{ij}(t) = \begin{cases} \sigma_{ij}(t-1) & -(a_{ij} A(t))<0 \\\\ \sigma_{ij}(t-1)+1 & -(a_{ij} A(t))>0 \end{cases}
 $$
 
 For more information, you can refer to the main documentation that we used .
