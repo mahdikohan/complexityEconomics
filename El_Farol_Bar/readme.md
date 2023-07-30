@@ -58,4 +58,5 @@ For more information, you can refer to the main documentation that we used .
 ## References
 
 [1] Arthur, W. Brian. “Inductive Reasoning and Bounded Rationality.” The American Economic Review 84, no. 2 (1994): 406–11. http://www.jstor.org/stable/2117868.
-[2] https://www.ece.rutgers.edu/~marsic/books/SE/projects/MinorityGame/ElFarolBar.pdf.
+
+[2] El Farol Bar Problem and the Minority Game https://www.ece.rutgers.edu/~marsic/books/SE/projects/MinorityGame/ElFarolBar.pdf.
