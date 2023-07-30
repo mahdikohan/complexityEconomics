@@ -53,7 +53,12 @@ $$
 \sigma_{ij}(t) = \begin{cases} \sigma_{ij}(t-1) & -(a_{ij} A(t))<0 \\\\ \sigma_{ij}(t-1)+1 & -(a_{ij} A(t))>0 \end{cases}
 $$
 
-For more information, you can refer to the main documentation that we used .
+For more information, you can refer to the main documentation that we used.
+
+<p align="center">
+    <img src="https://github.com/mahdikohan/complexityEconomics/blob/4a256e64f5f487c38829968dd3655d576c5fa982/El_Farol_Bar/images/result_100_30_4_100.png" alt="Dynamic model" width="600">
+</p>
+<p align="center">Figure 3: result of simulation.</p>
 
 ## References
 
