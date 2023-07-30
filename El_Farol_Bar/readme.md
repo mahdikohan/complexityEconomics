@@ -51,6 +51,7 @@ $$
 
 virtual score
 > :warning: **Warning: There is an issue with the minus condition in the equation in the main document [2]. We have corrected it here.**
+
 $$
 \sigma_{ij}(t) = \begin{cases} \sigma_{ij}(t-1) & -(a_{ij} A(t))<0 \\\\ \sigma_{ij}(t-1)+1 & -(a_{ij} A(t))>0 \end{cases}
 $$
