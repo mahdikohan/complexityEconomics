@@ -76,10 +76,6 @@ class person:
         self.action = result['action']
         self.decision = result
 
-        # print(pd.DataFrame(lookup_result,columns=['strg','rfound','score']))
-        # print(self.decision)
-        # print("")
-
         return self.decision
     
 
@@ -105,13 +101,6 @@ class person:
 
     def toJSON(self):
         return json.dumps(self, default=lambda o: o.__dict__, sort_keys=True, indent=4)
-
-
-
-class bar:
-    def __init__(self) -> None:
-        self.totalCap:int
-        self.members:list[person]
 
 
 
@@ -175,33 +164,11 @@ if __name__ == '__main__':
         
         ticks = ticks - 1
 
-    # while init_tick-ticks < init_tick:
-    #     history = []
+    avg_line = sum(simulation)/len(simulation)
 
-    #     attendanceCounter = 0
-    #     tempAttendancePersonIndexes = []
 
-    #     for j, p in enumerate(people):
-    #         if p.takeDecision():
-    #             attendanceCounter = attendanceCounter + 1
-    #             tempAttendancePersonIndexes.append(j)
-    #         # else:
-    #         #     p.appendHistory(60)
-        
-    #     for k in tempAttendancePersonIndexes:
-    #         people[k].appendHistory(attendanceCounter)
-        
-    #     result  = len(tempAttendancePersonIndexes)
-    #     result_of_sim.append(result)
-    #     # print(result)
-    #     ticks = ticks - 1
-
-    #     if ticks==1:
-    #         for p in people:
-    #             print(p.history)
-    
+    # This part try to plot simulation results base on ticks and also 
+    # shows the average line in it.
     plt.plot(simulation)
+    plt.plot(len(simulation)*[avg_line])
     plt.show()
-
-    # for p in people:
-    #     print(p.toJSON())
