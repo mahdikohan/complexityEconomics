@@ -45,7 +45,7 @@ $$
 
 
 $$
-g_i'(t) = \begin{cases} 0 & g_i(t)>0 \\\\ 1 & g_i(t)<0 \end{cases}$$
+g_i'(t) = \begin{cases} 0 & g_i(t)<0 \\\\ 1 & g_i(t)>0 \end{cases}$$
 $$
 
 
