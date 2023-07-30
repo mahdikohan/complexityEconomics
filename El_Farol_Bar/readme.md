@@ -1,4 +1,9 @@
 # El Farlo Problem
 In a thought-provoking discussion of rationality in economics, the author argues that while the concept of perfect, logical, deductive rationality is useful for solving theoretical problems, it falls short in accurately describing human behavior in more complex situations. The author attributes this to two factors: the limitations of human rationality in coping with high levels of complexity and the inability of agents to rely on others to behave perfectly rationally in interactive situations. As a result, economists have been exploring alternative models of bounded rationality, with many ideas being proposed but no consensus yet reached. In contrast, psychologists have reached a reasonable agreement that humans use characteristic and predictable methods of inductive reasoning in complicated or ill-defined situations. This insightful analysis raises important questions about the limitations of traditional economic models and the need for new approaches to understanding human behavior.
 
-Continuing the discussion, a paper written by W. Brian Arthur in 1994 illustrates the concept of thinking inductively and presents a dynamic problem called “*El Farol Bar.*” This paper provides further insight into the limitations of traditional economic models and the need for new approaches to understanding human behavior
+Continuing the discussion, a paper written by W. Brian Arthur in 1994 [1] illustrates the concept of thinking inductively and presents a dynamic problem called “*El Farol Bar.*” This paper provides further insight into the limitations of traditional economic models and the need for new approaches to understanding human behavior
+
+
+## References
+
+[1] Arthur, W. Brian. “Inductive Reasoning and Bounded Rationality.” The American Economic Review 84, no. 2 (1994): 406–11. http://www.jstor.org/stable/2117868.
