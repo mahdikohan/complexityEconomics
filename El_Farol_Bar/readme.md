@@ -18,7 +18,7 @@ These properties are robust to changes in types of forecasts created as long as 
 
 
 <p align="center">
-    <img src="https://github.com/mahdikohan/complexityEconomics/blob/5beb05ee5fea4fdd3d8d2f061171863a378eb85c/El_Farol_Bar/images/fig2.PNG" alt="Dynamic model" width="800">
+    <img src="https://github.com/mahdikohan/complexityEconomics/blob/5beb05ee5fea4fdd3d8d2f061171863a378eb85c/El_Farol_Bar/images/fig2.PNG" alt="Dynamic model" width="600">
 </p>
 <p align="center">Figure 2: Minority game model of an agent playing the game.</p>
 
