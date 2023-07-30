@@ -9,11 +9,10 @@ By similar reasoning, any commonality of expectations gets broken up and agents 
 The ecology of expectations self-organizes into an equilibrium pattern which hovers around the “comfortable” level in the bar. If fewer came in the long term, low forecasts would be valid, so many would come. An attraction to this level emerges. This emergent outcome is organic in nature, for while the population of forecasts on average supports this “comfortable” level, it keeps changing in membership forever. It is something like a forest whose contours do not change, but whose individual trees do.
 These properties are robust to changes in types of forecasts created as long as there is a reasonable diversity of them. The El Farol bar problem has since spawned many “solutions,” variants, and further papers. But solutions were not quite Arthur’s intention. At the time, economists had become interested in indeterminacy and fundamental uncertainly, and Arthur was looking to formulate a suitable “toy problem” to illustrate these—a stripped-down problem that’s simple to state but whose outcome or resolution brings a wealth of lessons.
 
-
-  <figure style="text-align: center;">
+<p align="center">
     <img src="https://github.com/mahdikohan/complexityEconomics/blob/9d1e7f565068ac55eba46e1cc692d2fc63d6f318/El_Farol_Bar/images/fig1.PNG" alt="Dynamic model" width="700">
-    <figcaption>Figure 1: El Farol Bar problem simulation</figcaption>
-  </figure>
+</p>
+<p align="center">Figure 1: El Farol Bar problem simulation</p>
 
 
 
