@@ -44,6 +44,10 @@ g_i(t) = -a_i(t) A(t)$$
 $$
 
 
+$$
+g_i'(t) = \begin{cases} 0 & g_i(t)>0 \\\\ 1 & g_i(t)<0 \end{cases}$$
+$$
+
 
 $$
 x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}
