@@ -30,7 +30,7 @@ The mechanism by which a person makes a decision is shown in Figure 2.
 In summary, we can write some equations that are used to simulate the dynamic model:
 
 $$
-$$a_i(t) = \begin{cases} -1 & \text{stay home} \\\\ 1 & \text{go bar} \end{cases}$$
+a_i(t) = \begin{cases} -1 & \text{stay home} \\\\ 1 & \text{go bar} \end{cases}$$
 $$
 
 $$
