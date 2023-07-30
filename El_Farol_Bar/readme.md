@@ -12,18 +12,16 @@ These properties are robust to changes in types of forecasts created as long as 
 <p align="center">
     <img src="https://github.com/mahdikohan/complexityEconomics/blob/9d1e7f565068ac55eba46e1cc692d2fc63d6f318/El_Farol_Bar/images/fig1.PNG" alt="Dynamic model" width="700">
 </p>
-<p align="center">Figure 1: El Farol Bar problem simulation</p>
+<p align="center">Figure 1: El Farol Bar problem simulation.</p>
 
 
 
 
 <p align="center">
-  <p align="center">
-  <figure>
-  <img src="https://github.com/mahdikohan/complexityEconomics/blob/9d1e7f565068ac55eba46e1cc692d2fc63d6f318/El_Farol_Bar/images/fig1.PNG" alt="Dynamic model" width="700">
-    <figcaption>Figure 2: Minority game model of an agent playing the game.</figcaption>
-  </figure>
-  </p>
+    <img src="https://github.com/mahdikohan/complexityEconomics/blob/5beb05ee5fea4fdd3d8d2f061171863a378eb85c/El_Farol_Bar/images/fig2.PNG" alt="Dynamic model" width="800">
+</p>
+<p align="center">Figure 2: Minority game model of an agent playing the game.</p>
+
 ## References
 
 [1] Arthur, W. Brian. “Inductive Reasoning and Bounded Rationality.” The American Economic Review 84, no. 2 (1994): 406–11. http://www.jstor.org/stable/2117868.
