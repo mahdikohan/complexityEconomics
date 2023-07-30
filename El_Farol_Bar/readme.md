@@ -55,6 +55,34 @@ $$
 
 For more information, you can refer to the main documentation that we used.
 
+## Simulation
+We conducted a test of our simulation method using Python and a set of initial parameters. The simulation was run with the following initial values:
+
+The number of people in the simulation was set to 100.
+The attendance rate was set to 30.
+The number of strategies used in the simulation was set to 4.
+The number of ticks (iterations) in the simulation was set to 100.
+These initial parameters were used to configure the simulation and determine its behavior.
+
+it's enough for your test just change init vars in first part of code like:
+
+Here is some example code:
+
+```python
+### Initial input variables for run simulaion
+
+# This var show total number of our society
+number_of_people = 100
+# This var shows pleasable attendance in bar
+attendance = 30
+# This var determine distinct number strategy that each person can have 
+number_of_strategy = 4
+# This var gives number of execusion of model in simulation
+ticks = 100
+# This var shows length of long memory
+length_of_long_memory = 3
+```
+
 <p align="center">
     <img src="https://github.com/mahdikohan/complexityEconomics/blob/4a256e64f5f487c38829968dd3655d576c5fa982/El_Farol_Bar/images/result_100_30_4_100.png" alt="Dynamic model" width="800">
 </p>
