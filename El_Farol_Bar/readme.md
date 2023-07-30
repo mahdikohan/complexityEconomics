@@ -58,11 +58,11 @@ For more information, you can refer to the main documentation that we used.
 ## Simulation
 We conducted a test of our simulation method using Python and a set of initial parameters. The simulation was run with the following initial values:
 
-The number of people in the simulation was set to 100.
-The attendance rate was set to 30.
-The number of strategies used in the simulation was set to 4.
-The number of ticks (iterations) in the simulation was set to 100.
-These initial parameters were used to configure the simulation and determine its behavior.
+- The number of people in the simulation was set to 100.
+- The attendance rate was set to 30.
+- The number of strategies used in the simulation was set to 4.
+- The number of ticks (iterations) in the simulation was set to 100.
+- These initial parameters were used to configure the simulation and determine its behavior.
 
 it's enough for your test just change init vars in first part of code like:
 
