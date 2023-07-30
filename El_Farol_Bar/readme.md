@@ -10,7 +10,7 @@ The ecology of expectations self-organizes into an equilibrium pattern which hov
 These properties are robust to changes in types of forecasts created as long as there is a reasonable diversity of them. The El Farol bar problem has since spawned many “solutions,” variants, and further papers. But solutions were not quite Arthur’s intention. At the time, economists had become interested in indeterminacy and fundamental uncertainly, and Arthur was looking to formulate a suitable “toy problem” to illustrate these—a stripped-down problem that’s simple to state but whose outcome or resolution brings a wealth of lessons.
 
 
-!El_Farol_Bar/images/fig1.PNG
+![El_Farol_Bar/images/fig1.PNG](https://github.com/mahdikohan/complexityEconomics/blob/9d1e7f565068ac55eba46e1cc692d2fc63d6f318/El_Farol_Bar/images/fig1.PNG)
 
 ## References
 
