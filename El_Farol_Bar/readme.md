@@ -29,26 +29,28 @@ The mechanism by which a person makes a decision is shown in Figure 2.
 
 In summary, we can write some equations that are used to simulate the dynamic model:
 
+action function
 $$
 a_i(t) = \begin{cases} -1 & \text{stay home} \\\\ 1 & \text{go bar} \end{cases}$$
 $$
 
-
+total result
 $$
 A(t) = \\sum_{j=1}^{N} {a_{j}(t)}$$
 $$
 
-
+reward or loss
 $$
 g_i(t) = -a_i(t) A(t)$$
 $$
 
-
+marginal reward
 $$
 g_i'(t) = \begin{cases} 0 & g_i(t)<0 \\\\ 1 & g_i(t)>0 \end{cases}$$
 $$
 
-
+virtual score
+> :warning: **Warning: There is an issue with the minus condition in the equation in the main document [2]. We have corrected it here.**
 $$
 \sigma_{ij}(t) = \begin{cases} \sigma_{ij}(t-1) & -(a_{ij} A(t))<0 \\\\ \sigma_{ij}(t-1)+1 & -(a_{ij} A(t))>0 \end{cases}
 $$
