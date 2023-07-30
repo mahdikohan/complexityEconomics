@@ -14,7 +14,12 @@ These properties are robust to changes in types of forecasts created as long as 
 </p>
 <p align="center">Figure 1: El Farol Bar problem simulation.</p>
 
+To solve the El Farol problem, we used a computer engineering method published by the Department of Electrical and Computer Engineering . The problem is posed as shown in Figure 1. The objects used for simulation are illustrated in Figure 1 as follows:
 
+- **Agents**: people who want to go to the bar or stay home
+- **Iteration (ticks)**: number of rounds (number of weekends)
+- **Memory**: number of recent outcomes
+- **Strategy**: decision strategy (defined to simulate randomness in decision and long memory optimizer)
 
 
 <p align="center">
