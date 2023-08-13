@@ -8,6 +8,9 @@ The model presented in the document belongs to the second category. The most inf
 
 In contrast, D2008 have parts of their transactions carried out at the aggregate level. The model presented in the paper follows Dosi et al. and Gaffeo et al. in a number of aspects, but differs in that it analyzes growth as a result of R&D and is concerned with basic macroeconomic relations in a non-growth environment. It makes use of only two different types of agents: **households** and **firms**.
 
+### Model considerations
+in this model for generate a world that agents can do action in it, we consider some propertise:
+- Exclude growth 
 
 ## References
 [1] Lengnick, M. (2013). Agent-based macroeconomics: A baseline model. Journal of Economic Behavior & Organization, 86, 102-120. https://doi.org/10.1016/j.jebo.2012.12.021
