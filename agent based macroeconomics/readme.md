@@ -26,5 +26,14 @@ Here are the key points of the text you provided in bullet form:
 - The aggregate of all agents is connected by a bipartite network of trading relationships.
 - In the short run, this network is fixed, but over time, agents cut unsatisfying trading connections to create other more beneficial ones.
 
+- Each household has two properties: the reservation wage ωh and the liquidity mh.
+- The reservation wage defines a minimal claim on labor income, but households might work for less than ωh under specific circumstances.
+- The liquidity determines the amount of monetary units the household currently possesses and is changed each time the household performs a transaction.
+- Current liquidity equals the sum of all past income minus the sum of all past spendings plus the initial endowment with liquidity.
+- Firms also have the liquidity property mf, inventory if, a goods price pf, and a wage rate wf.
+- Every household inelastically supplies one unit of labor (lh = 1).
+- Households have limited knowledge and only know the prices of firms they have type A connections with and the wage rate of their employer.
+- Firms do not know prices or wages of any competitor, so all knowledge is purely local and the law of one price does not necessarily apply.
+
 ## References
 [1] Lengnick, M. (2013). Agent-based macroeconomics: A baseline model. Journal of Economic Behavior & Organization, 86, 102-120. https://doi.org/10.1016/j.jebo.2012.12.021
