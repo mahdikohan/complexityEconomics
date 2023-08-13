@@ -26,6 +26,7 @@ Here are the key points of the text you provided in bullet form:
 - The aggregate of all agents is connected by a bipartite network of trading relationships.
 - In the short run, this network is fixed, but over time, agents cut unsatisfying trading connections to create other more beneficial ones.
 
+
 - Each household has two properties: the reservation wage ωh and the liquidity mh.
 - The reservation wage defines a minimal claim on labor income, but households might work for less than ωh under specific circumstances.
 - The liquidity determines the amount of monetary units the household currently possesses and is changed each time the household performs a transaction.
