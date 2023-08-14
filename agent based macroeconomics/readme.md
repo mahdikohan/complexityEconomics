@@ -81,6 +81,20 @@ Here are the key points of the text you provided in bullet form:
 - To avoid inconsistent planning behavior that violates the budget constraint, the equation is changed.
 
 #### The lapse of a day
+- After the above steps have been performed, the transactions of the first day begin.
+- Households are picked in a random order to execute their goods demand.
+- Since planned demand cr h has been determined for a complete month, but transactions are taking place daily, we have to bring cr h from a monthly to a daily basis.
+- The most simple and straightforward way to do so is to assume that cr h is distributed equally over the days of the month.
+- Each household visits one randomly determined firm of those he has a type A connection with.
+- If that firm’s inventories are high enough to satisfy his daily demand of cr h/21 and the household’s liquidity is high enough to pay for the goods, the transaction will be performed.
+- The household’s liquidity is reduced by the purchasing costs, while the firm’s liquidity is raised by the same amount and its inventories are reduced by cr h/21.
+- If the household cannot afford to buy the planned amount of goods, his demand is reduced to the highest possible amount.
+- If the firm’s inventories are lower than the household’s demand, the transaction is performed at the highest possible amount of if. Thus inventories can never become negative.
+- The household tries to satisfy the remaining demand by repeating the buying process with another firm. This process is stopped after n firms have been asked or at least 95 percent of the planned demand has been satisfied. Eventually, remaining demand vanishes.
+- Next, each firm produces according to a production function where lf is the number of workers the firm employs and  is a positive technology parameter.
+- Following G2008, we assume a production technology that is a linear function of labor input.
+- The firm’s inventory is increased by the produced goods.
+- After all households and firms have performed their daily actions, the next day starts.
 
 ## References
 [1] Lengnick, M. (2013). Agent-based macroeconomics: A baseline model. Journal of Economic Behavior & Organization, 86, 102-120. https://doi.org/10.1016/j.jebo.2012.12.021
