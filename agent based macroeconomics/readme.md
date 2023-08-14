@@ -97,8 +97,6 @@ Here are the key points of the text you provided in bullet form:
 - After all households and firms have performed their daily actions, the next day starts.
 
 #### End of the month
-Here are the main points in bullet form:
-
 - After all 21 working days are performed, the month ends.
 - Firms use the liquidity they own at the end of a month for three different purposes: pay wages, build a buffer for bad times, and pay profits.
 - First, all firms pay their workers a wage of wf: the firm’s liquidity is reduced by wf · lf while the liquidity of each household employed by that firm is raised by wf.
