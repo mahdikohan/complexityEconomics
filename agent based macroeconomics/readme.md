@@ -51,6 +51,27 @@ Here are the key points of the text you provided in bullet form:
 - Prices are raised or decreased as long as they are within certain upper and lower bar values relative to marginal costs.
 - Prices are adjusted according to a formula where the growth rate is idiosyncratic and drawn from a uniform distribution.
 - Firms set the newly determined price only with a certain probability.
+
+
+#### Part two
+- After all firms have formed decisions, it is the households’ turn to search for more beneficial trading connections.
+- Households are picked in a random order to seek for new network connections that are more beneficial than existing ones.
+- With a certain probability, each household picks one randomly determined firm from the subset of all firms he has a type A connection with and one randomly determined firm from those he has no such connection with.
+- The probability of picking the latter out of the set of all possible firms is proportional to the firm’s size, measured in employees.
+- If the price of the latter is at least a certain percentage lower than that of the former, the existing connection is removed and the new one is established.
+- This procedure represents the search of households for cheaper places to buy.
+- The household might have been demand constrained during the last month, i.e. one or more of the firms he wanted to buy from were not able to satisfy his demand fully.
+- If this is the case, the household randomly determines one of those firms with a probability proportional to the extent of the restriction.
+- He cuts the type A connection to this firm and replaces it with a connection to a new one.
+- This procedure represents the search for firms that are able to satisfy the demand fully.
+- In analogy to the above search mechanism, this procedure is only executed with a certain probability.
+- The goods demand that one individual firm encounters is negatively correlated with its price and with its failure to satisfy past demand.
+- If the household is unemployed, he visits a randomly chosen firm to check whether there is an open position.
+- If the firm indeed offers an open position and pays a wage that is higher than the household’s currently received wage, the position is accepted and a new type B connection between the household and the firm is created.
+- If the firm offers no vacancy or the wage it pays is too small, the search process is repeated until a total number of firms have been visited.
+- An employed household might end up working for less than his reservation wage if his employer has decided to decrease wages.
+- In such a case, households do not quit immediately but instead intensify their search effort for another job that satisfies certain conditions.
+- As a result, we have three different intensities to search for vacancies: employees who are satisfied with their job show the least search effort in the labor market.
   
 ## References
 [1] Lengnick, M. (2013). Agent-based macroeconomics: A baseline model. Journal of Economic Behavior & Organization, 86, 102-120. https://doi.org/10.1016/j.jebo.2012.12.021
