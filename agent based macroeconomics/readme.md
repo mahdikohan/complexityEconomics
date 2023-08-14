@@ -72,6 +72,12 @@ Here are the key points of the text you provided in bullet form:
 - An employed household might end up working for less than his reservation wage if his employer has decided to decrease wages.
 - In such a case, households do not quit immediately but instead intensify their search effort for another job that satisfies certain conditions.
 - As a result, we have three different intensities to search for vacancies: employees who are satisfied with their job show the least search effort in the labor market.
-  
+- Unemployed households show the highest search effort since they visit more than one firm per month.
+- Households have to decide how much liquidity to spend for the purchase of consumption goods and how much to save.
+- Following G2008, the interest on savings is normalized to 0.
+- According to empirical evidence and theory, consumption expenditure increases with personal wealth but at a decaying rate.
+- Consumption (and thus also savings) depends only on wealth and not on the interest rate. Savings are thus due to a precautionary motive.
+- Since households receive income on a monthly basis, the decision of dividing it on consumption and savings is also performed monthly.
+- To avoid inconsistent planning behavior that violates the budget constraint, the equation is changed.
 ## References
 [1] Lengnick, M. (2013). Agent-based macroeconomics: A baseline model. Journal of Economic Behavior & Organization, 86, 102-120. https://doi.org/10.1016/j.jebo.2012.12.021
