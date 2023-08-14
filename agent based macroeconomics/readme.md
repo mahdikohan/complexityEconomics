@@ -12,9 +12,10 @@ In contrast, D2008 have parts of their transactions carried out at the aggregate
 in this model for generate a world that agents can do action in it, we consider some propertise:
 Here are the key points of the text you provided in bullet form:
 
-- The model covers a pure market economy <span style="color:red"> **without a government** </span> or central bank.
-- Households and firms are fixed in number and infinitely lived.
-- Production technology is also fixed.
+- The model covers a pure market economy **without a government** or **central bank**.
+- Exclude growth in economics
+  - Households and firms are fixed in number and infinitely lived.
+  - Production technology is also fixed.
 - The fundamental time unit is days, while 21 coherent days are called a month.
 - Consumption goods are bought daily while labor is bought monthly.
 - Agents are characterized by loyalty to trading partners of former periods.
