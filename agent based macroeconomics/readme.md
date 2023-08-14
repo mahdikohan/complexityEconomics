@@ -16,8 +16,8 @@ Here are the key points of the text you provided in bullet form:
 - Exclude growth in economics
   - Households and firms are fixed in number and infinitely lived.
   - Production technology is also fixed.
-- The fundamental time unit is days, while 21 coherent days are called a month.
-- Consumption goods are bought daily while labor is bought monthly.
+- The fundamental time unit is **days**, while **21** coherent days are called a **month**.
+- Consumption goods are bought **daily** while labor is bought **monthly**.
 - Agents are characterized by loyalty to trading partners of former periods.
 - The model advances this feature by explicitly stating a network of relationships among agents.
 - All transactions are performed between individual agents throughout this network.
