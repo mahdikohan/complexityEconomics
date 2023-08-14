@@ -79,5 +79,8 @@ Here are the key points of the text you provided in bullet form:
 - Consumption (and thus also savings) depends only on wealth and not on the interest rate. Savings are thus due to a precautionary motive.
 - Since households receive income on a monthly basis, the decision of dividing it on consumption and savings is also performed monthly.
 - To avoid inconsistent planning behavior that violates the budget constraint, the equation is changed.
+
+#### The lapse of a day
+
 ## References
 [1] Lengnick, M. (2013). Agent-based macroeconomics: A baseline model. Journal of Economic Behavior & Organization, 86, 102-120. https://doi.org/10.1016/j.jebo.2012.12.021
