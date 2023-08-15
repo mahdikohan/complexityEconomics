@@ -26,7 +26,7 @@ Here are the key points of the text you provided in bullet form:
 
 #### Part two of model
 
-- Each household has two properties: the reservation wage ωh and the liquidity mh.
+- Each household has two properties: the reservation wage $`\w_{h}`$ and the liquidity $`m_{h}`$.
 - The reservation wage defines a minimal claim on labor income, but households might work for less than ωh under specific circumstances.
 - The liquidity determines the amount of monetary units the household currently possesses and is changed each time the household performs a transaction.
 - Current liquidity equals the sum of all past income minus the sum of all past spendings plus the initial endowment with liquidity.
