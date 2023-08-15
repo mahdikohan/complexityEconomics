@@ -27,7 +27,7 @@ Here are the key points of the text you provided in bullet form:
 - The reservation wage defines a minimal claim on labor income, but households might work for less than **$`\omega_{h}`$** under specific circumstances.
 - The liquidity determines the amount of monetary units the household currently possesses and is changed each time the household performs a transaction.
 - Current liquidity equals the sum of all past income minus the sum of all past spendings plus the initial endowment with liquidity.
-$$ m_{h,t}=m_{h,t-1}+\text{income}_{t-1}-\text{spending}_{t-1} $$
+  $`m_{h,t}=m_{h,t-1}+\text{income}_{t-1}-\text{spending}_{t-1}`$
 - Firms also have the liquidity property mf, inventory if, a goods price pf, and a wage rate wf.
 - Every household inelastically supplies one unit of labor (lh = 1).
 - Households have limited knowledge and only know the prices of firms they have type A connections with and the wage rate of their employer.
