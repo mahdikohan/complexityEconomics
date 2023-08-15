@@ -21,10 +21,7 @@ Here are the key points of the text you provided in bullet form:
 - Agents are characterized by loyalty to trading partners of former periods.
 - The model advances this feature by explicitly stating a network of relationships among agents.
 - All transactions are performed between individual agents throughout this network.
-- Households have trading relations with 7 different firms (type A connections) for buying consumption goods and one firm for which they work (type B connection).
 - Firms can have an unlimited amount of both types of trading relations.
-- A type A and a type B connection can exist between the same household–firm-pair.
-- The aggregate of all agents is connected by a bipartite network of trading relationships.
 - In the short run, this network is fixed, but over time, agents cut unsatisfying trading connections to create other more beneficial ones.
 
 #### Part two of model
