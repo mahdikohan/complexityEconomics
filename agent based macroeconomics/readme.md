@@ -97,7 +97,7 @@ $$
 #### End of the month
 - After all 21 working days are performed, the month ends.
 - Firms use the liquidity they own at the end of a month for three different purposes: pay wages, build a buffer for bad times, and pay profits.
-- First, all firms pay their workers a wage of wf: the firm’s liquidity is reduced by wf · $`l_f`$ while the liquidity of each household employed by that firm is raised by wf.
+- First, all firms pay their workers a wage of $`w_f`$: the firm’s liquidity is reduced by $`w_f.l_f`$ while the liquidity of each household employed by that firm is raised by wf.
 - Second, if the firm has liquidity remaining after the payout of wages, it keeps a fraction as a buffer for possibly negative future profits. This liquidity buffer (mbuffer f,t) is given relative to labor costs.
 - Third, all remaining liquidity of the firm is distributed as profit among all households. Rich households have higher claims on firms’ profits than poor ones. Therefore each household receives a share of aggregate profits that is proportional to his current liquidity.
 - In some cases, it might happen that the firm made losses during the month. As a first option, the firm bridges this problematic situation by not paying any profit and reducing the liquidity buffer while keeping the wage payments unchanged.
