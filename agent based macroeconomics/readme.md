@@ -4,6 +4,7 @@ We will provide a summary of a model presented by Lengnick, M. (2013), who is a 
 <p align="center">
   <img src="https://github.com/mahdikohan/complexityEconomics/blob/feb5defad2f0201127979c63033c254dd47c503e/agent%20based%20macroeconomics/images/simple%20macro%20model.png" alt="Lorenz attractor" width="600">
 </p>
+<p align="center">Figure 1: A circular flow of income is an economic model</p>
 
 ## The model
 **ACE** (Agent-based Computational Economics) models are divided into two categories. The first category tries to mimic real-world economies in a highly detailed way, such as the ***EURACE*** project that models the European economy. The second category consists of stylized models that abstract from real economies in a number of ways. They contain only a small number of different agent types and interaction rules. 
