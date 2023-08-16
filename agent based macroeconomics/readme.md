@@ -81,9 +81,9 @@ $$
 #### The lapse of a day
 - After the above steps have been performed, the transactions of the first day begin.
 - Households are picked in a random order to execute their goods demand.
-- Since planned demand cr h has been determined for a complete month, but transactions are taking place daily, we have to bring cr h from a monthly to a daily basis.
-- The most simple and straightforward way to do so is to assume that cr h is distributed equally over the days of the month.
-- Each household visits one randomly determined firm of those he has a type A connection with.
+- Since planned demand $`c^r_h`$ has been determined for a complete month, but transactions are taking place daily, we have to bring $`c^r_h`$ from a monthly to a daily basis.
+- The most simple and straightforward way to do so is to assume that $`c^r_h`$ is distributed equally over the days of the month.
+- Each household visits one randomly determined firm of those he has a connection with.
 - If that firm’s inventories are high enough to satisfy his daily demand of cr h/21 and the household’s liquidity is high enough to pay for the goods, the transaction will be performed.
 - The household’s liquidity is reduced by the purchasing costs, while the firm’s liquidity is raised by the same amount and its inventories are reduced by cr h/21.
 - If the household cannot afford to buy the planned amount of goods, his demand is reduced to the highest possible amount.
