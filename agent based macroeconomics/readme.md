@@ -33,7 +33,7 @@ m_{h,t} = m_{h,t-1} + Income_{t-1} - Spending_{t-1}
 $$
 - Firms also have the liquidity property **$`m_f`$**, inventory **$`i_f`$**, a goods price **$`p_f`$**, and a wage rate **$`w_f`$**.
 - Every household inelastically supplies one unit of labor ($`l_h = 1`$).
-- Households have limited knowledge and only know the prices of firms they have type A connections with and the wage rate of their employer.
+- Households have limited knowledge and only know the prices of firms they have connections with them and the wage rate of their employer.
 - Firms do not know prices or wages of any competitor, so all knowledge is purely local and the law of one price does not necessarily apply.
 
 #### Beginning of a month
