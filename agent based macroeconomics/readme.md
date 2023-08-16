@@ -84,12 +84,12 @@ $$
 - Since planned demand $`c^r_h`$ has been determined for a complete month, but transactions are taking place daily, we have to bring $`c^r_h`$ from a monthly to a daily basis.
 - The most simple and straightforward way to do so is to assume that $`c^r_h`$ is distributed equally over the days of the month.
 - Each household visits one randomly determined firm of those he has a connection with.
-- If that firm’s inventories are high enough to satisfy his daily demand of cr h/21 and the household’s liquidity is high enough to pay for the goods, the transaction will be performed.
-- The household’s liquidity is reduced by the purchasing costs, while the firm’s liquidity is raised by the same amount and its inventories are reduced by cr h/21.
+- If that firm’s inventories are high enough to satisfy his daily demand of $`c^r_{h}/21`$ and the household’s liquidity is high enough to pay for the goods, the transaction will be performed.
+- The household’s liquidity is reduced by the purchasing costs, while the firm’s liquidity is raised by the same amount and its inventories are reduced by $`c^r_{h}/21`$.
 - If the household cannot afford to buy the planned amount of goods, his demand is reduced to the highest possible amount.
 - If the firm’s inventories are lower than the household’s demand, the transaction is performed at the highest possible amount of if. Thus inventories can never become negative.
-- The household tries to satisfy the remaining demand by repeating the buying process with another firm. This process is stopped after n firms have been asked or at least 95 percent of the planned demand has been satisfied. Eventually, remaining demand vanishes.
-- Next, each firm produces according to a production function where lf is the number of workers the firm employs and  is a positive technology parameter.
+- The household tries to satisfy the remaining demand by repeating the buying process with another firm. This process is stopped after $`n`$ firms have been asked or at least 95 percent of the planned demand has been satisfied. Eventually, remaining demand vanishes.
+- Next, each firm produces according to a production function where $`l_f`$ is the number of workers the firm employs and  is a positive technology parameter.
 - Following G2008, we assume a production technology that is a linear function of labor input.
 - The firm’s inventory is increased by the produced goods.
 - After all households and firms have performed their daily actions, the next day starts.
@@ -97,7 +97,7 @@ $$
 #### End of the month
 - After all 21 working days are performed, the month ends.
 - Firms use the liquidity they own at the end of a month for three different purposes: pay wages, build a buffer for bad times, and pay profits.
-- First, all firms pay their workers a wage of wf: the firm’s liquidity is reduced by wf · lf while the liquidity of each household employed by that firm is raised by wf.
+- First, all firms pay their workers a wage of wf: the firm’s liquidity is reduced by wf · $`l_f`$ while the liquidity of each household employed by that firm is raised by wf.
 - Second, if the firm has liquidity remaining after the payout of wages, it keeps a fraction as a buffer for possibly negative future profits. This liquidity buffer (mbuffer f,t) is given relative to labor costs.
 - Third, all remaining liquidity of the firm is distributed as profit among all households. Rich households have higher claims on firms’ profits than poor ones. Therefore each household receives a share of aggregate profits that is proportional to his current liquidity.
 - In some cases, it might happen that the firm made losses during the month. As a first option, the firm bridges this problematic situation by not paying any profit and reducing the liquidity buffer while keeping the wage payments unchanged.
