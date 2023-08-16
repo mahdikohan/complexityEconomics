@@ -1,6 +1,8 @@
 # Agent based Macroeconomics
 We will provide a summary of a model presented by Lengnick, M. (2013), who is a researcher in this field. We will also provide a framework using the Python programming language. This modeling and structure allow us to examine the desired results by changing the parameters.
 
+<></>
+
 ## The model
 **ACE** (Agent-based Computational Economics) models are divided into two categories. The first category tries to mimic real-world economies in a highly detailed way, such as the ***EURACE*** project that models the European economy. The second category consists of stylized models that abstract from real economies in a number of ways. They contain only a small number of different agent types and interaction rules. 
 
