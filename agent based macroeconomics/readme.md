@@ -102,7 +102,7 @@ $$
 - Third, all remaining liquidity of the firm is distributed as profit among all households. Rich households have higher claims on firms’ profits than poor ones. Therefore each household receives a share of aggregate profits that is proportional to his current liquidity.
 - In some cases, it might happen that the firm made losses during the month. As a first option, the firm bridges this problematic situation by not paying any profit and reducing the liquidity buffer while keeping the wage payments unchanged.
 - However, in some rare cases, the losses might be so large that even with a reduction of $`m^{buffer}_{f,t}`$ down to zero, the labor costs are unaffordable. In this situation, we assume that the firm’s employees accept an immediate wage cut that is sufficient to keep the firm operating.
-- As a next step, households adjust their reservation wage depending on their currently received labor income. If the labor income exceeds a household's reservation wage, ωh is raised to the level of the received labor income. If the labor income is lower than $`w_h`$, the reservation wage is not changed. Instead, the household intensifies his search for a better-paid job.
+- As a next step, households adjust their reservation wage depending on their currently received labor income. If the labor income exceeds a household's reservation wage, $`w_h`$ is raised to the level of the received labor income. If the labor income is lower than $`w_h`$, the reservation wage is not changed. Instead, the household intensifies his search for a better-paid job.
 - If a household has been unemployed during the last month, his reservation wage for the next month is reduced by 10 percent.
 - The month ends and the next one begins.
 
