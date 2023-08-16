@@ -30,7 +30,7 @@ Here are the key points of the text you provided in bullet form:
 
 $$
 
-m_{h,t} = m_{h,t-1} + \text{income}_{t-1} - \text{spending}_{t-1}
+m_{h,t} = m_{h,t-1} 
 
 $$
 - Firms also have the liquidity property mf, inventory if, a goods price pf, and a wage rate wf.
