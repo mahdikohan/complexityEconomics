@@ -2,7 +2,7 @@
 We will provide a summary of a model presented by Lengnick, M. (2013), who is a researcher in this field. We will also provide a framework using the Python programming language. This modeling and structure allow us to examine the desired results by changing the parameters.
 
 <p align="center">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/5/5b/Lorenz_attractor_yb.svg" alt="Lorenz attractor" width="300">
+  <img src="https://github.com/mahdikohan/complexityEconomics/blob/feb5defad2f0201127979c63033c254dd47c503e/agent%20based%20macroeconomics/images/simple%20macro%20model.png" alt="Lorenz attractor" width="300">
 </p>
 
 ## The model
