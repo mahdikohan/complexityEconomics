@@ -49,9 +49,6 @@ $$
 - Prices are raised or decreased as long as they are within certain upper and lower bar values relative to marginal costs.
 - Prices are adjusted according to a formula where the growth rate is idiosyncratic and drawn from a uniform distribution.
 - Similar to Calvo (1983) firms set the newly determined price $`p^{new}_f`$ only with a probability $`\theta < 1`$.
-
-
-#### Part two
 - After all firms have formed decisions, it is the households’ turn to search for more beneficial trading connections.
 - Households are picked in a random order to seek for new network connections that are more beneficial than existing ones.
 - With a certain probability, each household picks one randomly determined firm from the subset of all firms he has a connection with and one randomly determined firm from those he has no such connection with.
