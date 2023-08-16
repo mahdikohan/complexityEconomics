@@ -48,8 +48,7 @@ $$
 - If current inventories are below or above certain critical bounds, the firm considers increasing or decreasing its price, respectively.
 - Prices are raised or decreased as long as they are within certain upper and lower bar values relative to marginal costs.
 - Prices are adjusted according to a formula where the growth rate is idiosyncratic and drawn from a uniform distribution.
-- Firms set the newly determined price only with a certain probability.
-- Similar to Calvo (1983) firms set the newly determined price $`p^{new}_f`$ only with a probability $`\theta < 1`$
+- Firms Similar to Calvo (1983) firms set the newly determined price $`p^{new}_f`$ only with a probability $`\theta < 1`$.
 
 
 #### Part two
