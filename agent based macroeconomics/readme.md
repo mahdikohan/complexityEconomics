@@ -105,6 +105,7 @@ $$
 
 ### Equations
 Production function
+
 $$
 f(l_f)=\lambda.l_f
 $$
