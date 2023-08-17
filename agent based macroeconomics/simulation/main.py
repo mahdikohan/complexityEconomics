@@ -24,8 +24,8 @@ class household:
     def consumption(self) -> int:
         pass
 
-    def current_liquidity(self, m_t_1, income_1, spending_1) -> int:
-        m_t_h = m_t_1 + income_1 - spending_1
+    def current_liquidity(self, m_t_1, income_t_1, spending_t_1) -> int:
+        m_t_h = m_t_1 + income_t_1 - spending_t_1
     
 
 
