@@ -32,7 +32,14 @@ class household:
 
 class firm:
     def __init__(self) -> None:
+        self.liquidity = None
+        self.wage = None
+    
+    # It means good prices
+    def price(self):
         pass
+
+    
 
 
 
