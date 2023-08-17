@@ -15,7 +15,7 @@ In contrast, D2008 have parts of their transactions carried out at the aggregate
 
 ### Model considerations
 in this model for generate a world that agents can do action in it, we consider some propertise:
-Here are the key points of the text you provided in bullet form:
+Here are the key points of the text which provided in bullet form:
 
 - The model covers a pure market economy **without a government** or **central bank**.
 - Exclude growth in economics
