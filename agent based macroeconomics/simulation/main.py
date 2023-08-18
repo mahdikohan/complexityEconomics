@@ -73,14 +73,20 @@ class firm:
         pass
 
 
+    # first order
     def pay_wage(self):
         pass
 
-
+    # second order
     def build_buffer(self):
         pass
-
+    
+    # third order
     def pay_profit(self):
+        """all remaining liquidity of the firm is 
+        distributed as profit among all households
+        Rich households have higher claims on firms’
+        profits than poor ones."""
         pass
 
     
