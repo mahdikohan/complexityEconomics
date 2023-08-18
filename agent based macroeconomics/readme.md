@@ -109,7 +109,7 @@ $$
 - The month ends and the next one begins.
 
 ### Equations
-Production function, $`\lambda`$ is a positive technology parameter
+Production function, $`\lambda`$ is a positive technology parameter and $`l_f`$ is firm labor count.
 
 $$
 f(l_f)=\lambda.l_f
