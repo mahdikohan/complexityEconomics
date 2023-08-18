@@ -26,6 +26,7 @@ class household:
 
     def current_liquidity(self, m_t_1, income_t_1, spending_t_1) -> int:
         m_t_h = m_t_1 + income_t_1 - spending_t_1
+        return m_t_h
     
 
 
