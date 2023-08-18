@@ -89,7 +89,7 @@ $$
 - If that firm’s inventories are high enough to satisfy his daily demand of $`c^r_{h}/21`$ and the household’s liquidity is high enough to pay for the goods, the transaction will be performed.
 - The household’s liquidity is reduced by the purchasing costs, while the firm’s liquidity is raised by the same amount and its inventories are reduced by $`c^r_{h}/21`$.
 - If the household cannot afford to buy the planned amount of goods, his demand is reduced to the highest possible amount.
-- If the firm’s inventories are lower than the household’s demand, the transaction is performed at the highest possible amount of if. Thus inventories can never become negative.
+- If the firm’s inventories are lower than the household’s demand, the transaction is performed at the highest possible amount of it. Thus inventories can never become negative.
 - The household tries to satisfy the remaining demand by repeating the buying process with another firm. This process is stopped after $`n`$ firms have been asked or at least 95 percent of the planned demand has been satisfied. Eventually, remaining demand vanishes.
 - Next, each firm produces according to a production function where $`l_f`$ is the number of workers the firm employs and $`\lambda`$ is a positive technology parameter.
 - Following G2008, we assume a production technology that is a linear function of labor input.
