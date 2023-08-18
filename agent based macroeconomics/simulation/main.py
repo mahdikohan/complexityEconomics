@@ -44,7 +44,7 @@ class firm:
         self.liquidity = None
         self.wage = None
         self.inventory = None
-        self.employee = None
+        self.employees = None    # Labor
     
 
     # It means good prices
@@ -67,6 +67,22 @@ class firm:
     def determine_price(self):
         pass
 
+
+    def execute_production(self):
+        # we assume a production technology that is a linear function of labor input.
+        pass
+
+
+    def pay_wage(self):
+        pass
+
+
+    def build_buffer(self):
+        pass
+
+    def pay_profit(self):
+        pass
+
     
 
 
@@ -80,4 +96,6 @@ if __name__ == "__main__":
     # begining of the month first step of simulation
 
     # next step is starting the day
+
+    # After all households and firms have performed their daily actions, the next day starts
     pass
