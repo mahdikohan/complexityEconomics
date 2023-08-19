@@ -124,7 +124,7 @@ $$
 Consumption function, 
 
 $$
-c_{h}^{r}=\right(\frac{m_{h}}{P^{I}_{h}}\left)^{\alpha}
+c_{h}^{r}=\left(\frac{m_{h}}{P^{I}_{h}}\right)^{\alpha}
 $$
 
 $$
