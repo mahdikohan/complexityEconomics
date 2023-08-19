@@ -136,6 +136,7 @@ p_{f}^{new}:=p_{f}^{old}.(1 \pm \nu), \nu \sim U(0, \delta)
 $$
 
 we have two type of under bar and over bar in $`i_f`$, $`\phi`$
+
 $$
 i_f=\phi.d^{old}_{f}
 $$
