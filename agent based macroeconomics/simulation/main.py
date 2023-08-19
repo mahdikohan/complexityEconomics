@@ -7,8 +7,9 @@
 
 # Initial variables
 num_households = 1000
-num_firms = 50
-days_of_month = 21              #days
+num_firms = 100
+days_of_month = 21              # days
+epoc = 500                      # years * 12
 
 # Define entities
 class household:
@@ -89,19 +90,15 @@ class firm:
         profits than poor ones."""
         pass
 
-    
-
-
 
 households = []
 firms = []
 
 
-
 if __name__ == "__main__":
-    # begining of the month first step of simulation
+    # Begining of the month first step of simulation
 
-    # next step is starting the day
+    # Next step is starting the day
 
     # After all households and firms have performed their daily actions, the next day starts
     pass
