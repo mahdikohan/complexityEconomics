@@ -149,9 +149,5 @@ $$
 m_{f,t}^{buffer} := X.w_{f}.l_{f}
 $$
 
-$$
-\underbar{X}
-$$
-
 ## References
 [1] Lengnick, M. (2013). Agent-based macroeconomics: A baseline model. Journal of Economic Behavior & Organization, 86, 102-120. https://doi.org/10.1016/j.jebo.2012.12.021
