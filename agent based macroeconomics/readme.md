@@ -128,7 +128,7 @@ c_{h}^{r}=\left(\frac{m_{h}}{P^{I}_{h}}\right)^{\alpha}
 $$
 
 $$
-w_{f}^{new}:=w_{f}^{old}.(1 \mp \mu)
+w_{f}^{new}:=w_{f}^{old}.(1 \pm \mu)
 $$
 
 $$
