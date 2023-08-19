@@ -141,5 +141,9 @@ $$
 i_f=\phi.d^{old}_{f}
 $$
 
+$$
+i^{new}_{f}:=i^{old}_{f}+\lambda.l_f
+$$
+
 ## References
 [1] Lengnick, M. (2013). Agent-based macroeconomics: A baseline model. Journal of Economic Behavior & Organization, 86, 102-120. https://doi.org/10.1016/j.jebo.2012.12.021
