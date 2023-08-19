@@ -128,10 +128,11 @@ c_{h}^{r}=\left(\frac{m_{h}}{P^{I}_{h}}\right)^{\alpha}
 $$
 
 $$
-w_{f}^{new}:=w_{f}^{old}.(1 \pm \mu) \text{    } \mu \sim U(0, \delta)
+w_{f}^{new}:=w_{f}^{old}.(1 \pm \mu), \mu \sim U(0, \delta)
 $$
 
 $$
+i_f=\phi.d^{old}_{f}
 $$
 
 ## References
