@@ -132,6 +132,10 @@ w_{f}^{new}:=w_{f}^{old}.(1 \pm \mu), \mu \sim U(0, \delta)
 $$
 
 $$
+p_{f}^{new}:=p_{f}^{old}.(1 \pm \nu), \nu \sim U(0, \delta)
+$$
+
+$$
 i_f=\phi.d^{old}_{f}
 $$
 
