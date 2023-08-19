@@ -140,7 +140,7 @@ $$
 $$
 
 $$
-\underbar{i}=\underbar{\phi}.d^{old}_{f}
+i_{f}=\phi.d^{old}_{f}
 $$
 
 ## References
