@@ -136,7 +136,11 @@ p_{f}^{new}:=p_{f}^{old}.(1 \pm \nu), \nu \sim U(0, \delta)
 $$
 
 $$
-i_f=\phi.d^{old}_{f}
+\bar{i_f}=\bar{\phi}.d^{old}_{f}
+$$
+
+$$
+\underbar{i_f}=\underbar{\phi}.d^{old}_{f}
 $$
 
 ## References
