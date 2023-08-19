@@ -132,7 +132,7 @@ w_{f}^{new}:=w_{f}^{old}.(1 \pm \mu), \mu \sim U(0, \delta)
 $$
 
 $$
-p_{f}^{new}:=p_{f}^{old}.(1 \pm \nu), \nu \sim U(0, v)
+p_{f}^{new}:=p_{f}^{old}.(1 \pm \nu), \nu \sim U(0, \vartheta)
 $$
 
 we have two type of under bar and over bar in $`i_f`$, $`\phi`$
