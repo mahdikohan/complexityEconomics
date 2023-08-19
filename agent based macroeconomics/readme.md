@@ -80,6 +80,12 @@ $$
 - Since households receive income on a monthly basis, the decision of dividing it on consumption and savings is also performed monthly.
 - To avoid inconsistent planning behavior that violates the budget constraint, the equation is changed.
 
+<p align="center">
+  <img src="https://github.com/mahdikohan/complexityEconomics/blob/c91e90314f693efe588a7f5653f84529b44d3db4/agent%20based%20macroeconomics/images/Flow%20chart%20of%20firms%20s%20decision%20procedure.PNG" alt="" width="600">
+</p>
+<p align="center">Figure 1:  Flow chart of firms’s decision procedure</p>
+
+
 #### The lapse of a day
 - After the above steps have been performed, the transactions of the first day begin.
 - Households are picked in a random order to execute their goods demand.
