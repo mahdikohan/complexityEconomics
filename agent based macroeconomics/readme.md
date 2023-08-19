@@ -122,6 +122,7 @@ f(l_f)=\lambda.l_f
 $$
 
 Consumption function, 
+
 $$
 c_{h}^{r}=(m_{h}/P^{I}_{h})^{\alpha}
 $$
