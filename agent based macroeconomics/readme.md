@@ -150,7 +150,7 @@ m_{f,t}^{buffer} := X.w_{f}.l_{f}
 $$
 
 $$
-\overbar{X}
+\underbar{X}
 $$
 
 ## References
