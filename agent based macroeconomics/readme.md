@@ -142,7 +142,7 @@ i_f=\phi.d^{old}_{f}
 $$
 
 $$
-i^{new}_{f}:=i^{old}_{f}+\lambda.l_f
+i_{f}^{new} := i_{f}^{old} + lambda.l_f
 $$
 
 ## References
