@@ -51,12 +51,14 @@ class firm:
     def __init__(self) -> None:
         self.liquidity = None
         self.wage = random.randrange(15080,89000,70)
+        
         # certain critical bounds
         self.critical_inventory = [15080,(89000+15080)/2]
+
         self.inventory = random.randrange(15080,89000,70)
         self.employees = random.randrange(5,10)                 # Labor
     
-        # this just for push
+        
     # It means good prices
     def price(self):
         pass
