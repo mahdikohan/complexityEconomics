@@ -66,8 +66,7 @@ class firm:
         able to change their prices, regardless of how long 
         it has been since they last changed them. This model 
         is commonly used in macroeconomic models to represent 
-        how prices can be rigid and not change frequently.
-        """
+        how prices can be rigid and not change frequently."""
         pass
 
 
