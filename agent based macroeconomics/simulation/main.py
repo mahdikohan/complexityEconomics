@@ -56,7 +56,7 @@ class firm:
         self.inventory = random.randrange(15080,89000,70)
         self.employees = random.randrange(5,10)                 # Labor
     
-
+        # this just for push
     # It means good prices
     def price(self):
         pass
