@@ -51,7 +51,7 @@ class firm:
     def __init__(self) -> None:
         self.liquidity = None
         self.wage = random.randrange(15080,89000,70)
-        
+
         # certain critical bounds
         self.critical_inventory = [15080,(89000+15080)/2]
 
@@ -61,6 +61,13 @@ class firm:
         
     # It means good prices
     def price(self):
+        """In simple terms, a Calvo contract is a pricing 
+        model where firms have a constant chance of being 
+        able to change their prices, regardless of how long 
+        it has been since they last changed them. This model 
+        is commonly used in macroeconomic models to represent 
+        how prices can be rigid and not change frequently.
+        """
         pass
 
 
