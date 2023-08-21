@@ -30,7 +30,7 @@ class household:
         self.liquidity = random.randrange(0,15000,10)
         
     def consumption(self) -> int:
-        pass
+        return 0
 
     def current_liquidity(self, m_t_1, income_t_1, spending_t_1) -> int:
         m_t_h = m_t_1 + income_t_1 - spending_t_1
