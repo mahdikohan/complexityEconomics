@@ -18,10 +18,10 @@ epoc = 500                      # years * 12
 
 # Define entities
 class household:
-    def __init__(self, init_firmId) -> None:
+    def __init__(self, init_uids) -> None:
 
         # Each household just work in one firm in a same time then -> l_h=1
-        self.firmId = init_firmId
+        self.uid = init_firmId
 
         # The reservation wage defines a minimal claim on labor income
         self.wage = random.randrange(15080,89000,70)
@@ -59,6 +59,12 @@ class firm:
 
         self.employees = random.randrange(5,10)                 # Labor
     
+    def recruitment(self):
+        # hire and fire employee
+        if self.inventory < self.critical_inventory[0]:
+            pass
+        elif self.inventory > self.critical_inventory[1]:
+            pass
         
     # It means good prices
     def price(self):
