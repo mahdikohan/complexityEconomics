@@ -49,12 +49,14 @@ class household:
 class firm:
     def __init__(self) -> None:
         self.liquidity = None
+
         self.wage = random.randrange(15080,89000,70)
 
         # certain critical bounds
         self.critical_inventory = [15080,(89000+15080)/2]
 
         self.inventory = random.randrange(15080,89000,70)
+
         self.employees = random.randrange(5,10)                 # Labor
     
         
@@ -86,7 +88,6 @@ class firm:
     def execute_production(self):
         # we assume a production technology that is a linear function of labor input.
         pass
-
 
     # first order
     def pay_wage(self):
