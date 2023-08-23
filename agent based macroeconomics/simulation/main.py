@@ -18,7 +18,7 @@ epoc = 500                      # years * 12
 
 # Define entities
 class household:
-    def __init__(self, init_uids) -> None:
+    def __init__(self) -> None:
 
         # Each household just work in one firm in a same time then -> l_h=1
         self.uid = init_firmId
