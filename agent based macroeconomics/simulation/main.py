@@ -41,7 +41,6 @@ class household:
     def get_new_position(self):
         pass
     
-
     # Households are picked in a random order to execute their goods demand.
     def execute_demand(self):
         pass
@@ -68,8 +67,6 @@ class firm:
         is commonly used in macroeconomic models to represent 
         how prices can be rigid and not change frequently."""
         pass
-
-
 
     # firm has to decide on how to set its wage rate based on past
     # success or failure to find workers at the offered wage rate.
