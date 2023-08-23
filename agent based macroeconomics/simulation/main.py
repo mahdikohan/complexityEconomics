@@ -1,6 +1,7 @@
 import random
 import matplotlib.pyplot as plt
 from collections import Counter
+import uuid
 
 #   Considerations:
 ##      Without a government or central banks
@@ -12,6 +13,7 @@ from collections import Counter
 # Initial variables
 num_households = 1000
 num_firms = 100
+theta = 0.25                    # price prob
 days_of_month = 21              # days
 epoc = 500                      # years * 12
 
@@ -21,7 +23,7 @@ class household:
     def __init__(self) -> None:
 
         # Each household just work in one firm in a same time then -> l_h=1
-        self.uid = init_firmId
+        self.huid = uuid.uuid4()
 
         # The reservation wage defines a minimal claim on labor income
         self.wage = random.randrange(15080,89000,70)
@@ -48,6 +50,9 @@ class household:
 
 class firm:
     def __init__(self) -> None:
+
+        self.fuid = uuid.uuid4()
+
         self.liquidity = None
 
         self.wage = random.randrange(15080,89000,70)
@@ -57,38 +62,62 @@ class firm:
 
         self.inventory = random.randrange(15080,89000,70)
 
-        self.employees = random.randrange(5,10)                 # Labor
+        self.employees_Cap = random.random
+
+        self.employees = []
     
     def recruitment(self):
         # hire and fire employee
         if self.inventory < self.critical_inventory[0]:
+            # hire immidiatly
             pass
         elif self.inventory > self.critical_inventory[1]:
+            # fire with one month delay
             pass
         
     # It means good prices
-    def price(self):
+    def price(self,theta):
         """In simple terms, a Calvo contract is a pricing 
         model where firms have a constant chance of being 
         able to change their prices, regardless of how long 
         it has been since they last changed them. This model 
         is commonly used in macroeconomic models to represent 
         how prices can be rigid and not change frequently."""
-        pass
+
+        # price adjusment
+        if self.inventory < self.critical_inventory[0]:
+            # Increase price with prob \theta
+            # handle prob
+            if random.random()>theta:
+                return
+
+            # 
+            # this is my change price code
+            # 
+            
+        elif self.inventory > self.critical_inventory[1]:
+            # Decrease price with prob \theta
+            # handle prob
+            if random.random()>theta:
+                return
+            
+            # 
+            # this is my change price code
+            #
 
     # firm has to decide on how to set its wage rate based on past
     # success or failure to find workers at the offered wage rate.
-    def determine_wage_rate(self):
+    def wage(self):
         # Wage adjustment
         pass
 
     
-    def determine_number_employee(self):
-        pass
+    def get_num_labor(self):
+        return len(self.employees)
+    
 
-
-    def determine_price(self):
-        pass
+    def open_position_status(self):
+        if len(self.employees)<self.
 
 
     def execute_production(self):
