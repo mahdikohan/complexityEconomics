@@ -89,14 +89,26 @@ class firm:
 
         self.wage = random.randrange(15080,89000,70)
 
-        # certain critical bounds
+        self.wage_t1 = 0
+
+        # inventory critical bounds
         self.critical_inventory = [15080,(89000+15080)/2]
+
+
+        # price critical bounds
+        self.critical_price = [0,0]
+
+        self.demand_t1 = 0
 
         self.inventory = random.randrange(15080,89000,70)
 
         self.employees_Cap = 0
 
         self.employees_Cap_t1 = 0
+
+        self.price = 0
+
+        self.price_t1 = 0
 
         self.employees = []
 
@@ -128,7 +140,7 @@ class firm:
                 self.employees.remove(employee)
         
     # It means good prices
-    def price(self,theta):
+    def set_price(self,theta):
         """In simple terms, a Calvo contract is a pricing 
         model where firms have a constant chance of being 
         able to change their prices, regardless of how long 
@@ -137,34 +149,39 @@ class firm:
         how prices can be rigid and not change frequently."""
 
         # price adjusment
-        if self.inventory < self.critical_inventory[0]:
-            # Increase price with prob \theta
-            # handle prob
-            if random.random() > theta:
-                return
-
-            # 
-            # this is my change price code
-            # 
-            
-        elif self.inventory > self.critical_inventory[1]:
+        #             
+        if (self.inventory > self.critical_inventory[1]) \
+            and (self.price > self.critical_price[1]):
             # Decrease price with prob \theta
             # handle prob
             if random.random() > theta:
                 return
-            
             # 
             # this is my change price code
+            self.price = self.wage_t1 * (1-nu)
             #
+
+        elif (self.inventory > self.critical_inventory[1]) \
+            and (self.price < self.critical_price[0]):
+            # Increase price with prob \theta
+            # handle prob
+            if random.random() > theta:
+                return                   
+            # 
+            # this is my change price code
+            self.price = self.wage_t1 * (1+nu)
+            # 
+
 
     # firm has to decide on how to set its wage rate based on past
     # success or failure to find workers at the offered wage rate.
     def wage(self):
         # Wage adjustment
-        if True:
-            self.wage = self.wage*(1+mu)
-        elif False:
-            self.wage = self.wage*(1-mu)
+        if self.employees_Cap_t1 <= 0:             # condition of increase wage
+            self.wage = self.wage_t1*(1+mu)
+
+        elif self.employees_Cap_t1 > 0:            # condition of decrease wage
+            self.wage = self.wage_t1*(1-mu)
 
     def get_wage(self):
         return self.wage
