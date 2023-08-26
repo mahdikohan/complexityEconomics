@@ -55,7 +55,6 @@ class household:
     # If the household is unemployed, he visits a randomly 
     # chosen firm to check whether there is an open position.
     def get_new_position(self,firms,parent_firm=None):
-
         if parent_firm != None:
             for f in firms:
                 # check wage rates
@@ -89,7 +88,7 @@ class firm:
 
         self.wage = random.randrange(15080,89000,70)
 
-        self.wage_t1 = 0
+        self.wage_t1 = random.randrange(15080,89000,70)
 
         # inventory critical bounds
         self.critical_inventory = [15080,(89000+15080)/2]
@@ -112,21 +111,28 @@ class firm:
 
         self.employees = []
 
+        self.next_month_fire = ''
+
     def get_fuid(self):
         return self.fuid()
     
     def recruitment(self):
+
         # hire and fire employee
         if self.inventory < self.critical_inventory[0]:
+
             # hire immidiatly
             if self.employees_Cap >= 0:
                 self.employees_Cap = self.employees_Cap + 1
+            
             elif self.employees_Cap < 0:
-                print('warning: Emploment cap is negetive (Labor count is exceed)')
+                print('warning: Employment cap is negetive (Labor count is exceed)')
 
         elif self.inventory > self.critical_inventory[1]:
+
             # fire with one month delay
-            pass
+            self.next_month_fire = random.sample(self.employees,1)
+            
 
     def set_employees_group(self,group:list) -> None:
         self.employees = group
@@ -134,11 +140,18 @@ class firm:
     def set_employee(self,labor):
         self.employees.append(labor)
 
-    def disconnect_employee(self,huid) -> None:
-        for employee in self.employees:
-            if employee.get_huid() == huid:
-                self.employees.remove(employee)
+    def disconnect_employee(self,huid = None) -> None:
+        if huid != None:
+            for employee in self.employees:
+                if employee.get_huid() == huid:
+                    self.employees.remove(employee)
+
+        elif huid == None:
+            if self.next_month_fire != '':
+                self.disconnect_employee(self.next_month_fire.get_huid())
+                self.employees_Cap = self.employees_Cap - 1
         
+
     # It means good prices
     def set_price(self,theta):
         """In simple terms, a Calvo contract is a pricing 
@@ -229,7 +242,6 @@ class firm:
 
 
 
-
 if __name__ == "__main__":
     """
     After all firms have formed decisions, it is 
@@ -260,7 +272,12 @@ if __name__ == "__main__":
         f.set_employees_group(households[10*n:10*n+10])
         for h in households[10*n:10*n+10]:
             print(h.get_huid())
-        print('++++++++++++++')
+        print('++++++++++++++++++++++++')
+
+
+    # firms action
+    for f in firms:
+        pass
     
 
     # After all firms have formed decisions, it is the households’ 
@@ -283,4 +300,3 @@ if __name__ == "__main__":
     # Next step is starting the day
 
     # After all households and firms have performed their daily actions, the next day starts
-
