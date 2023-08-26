@@ -76,6 +76,25 @@ class household:
                     # connect to new firm
                     f.set_employee(f)
 
+    # daily action
+    def exec_demand(self, firms):
+        """
+        Firms, picked in a random order to execute their goods demand
+        Each household visits one randomly determined firm of those
+        he has a connection with.
+        
+        demand c_h^r/21
+        satisfy 
+            1. Household's liquidity
+            2. 
+        """
+
+        pass
+    
+
+    # daily action
+    def exec_(self):
+        pass
 
 
 
@@ -188,7 +207,7 @@ class firm:
 
     # firm has to decide on how to set its wage rate based on past
     # success or failure to find workers at the offered wage rate.
-    def wage(self):
+    def set_wage(self):
         # Wage adjustment
         if self.employees_Cap_t1 <= 0:             # condition of increase wage
             self.wage = self.wage_t1*(1+mu)
@@ -274,12 +293,15 @@ if __name__ == "__main__":
             print(h.get_huid())
         print('++++++++++++++++++++++++')
 
+    # -----------------------------------------------------------------------
+    # Begining of the month first step of simulation
 
     # firms action
     for f in firms:
-        pass
+        f.set_price(theta= theta)
+        f.set_wage()
+        f.recruitment()
     
-
     # After all firms have formed decisions, it is the households’ 
     # turn to search for more beneficial trading connections.
     for f in firms:
@@ -288,15 +310,14 @@ if __name__ == "__main__":
             h.get_new_position(parent_firm = f,
                                        firms = sample_firms_group)
             
-
     # unemployment households search
     for f in firms:
         for h in unemployed:
             h.get_new_position(parent_firm = f, firms = firms) 
-
-
-    # Begining of the month first step of simulation
-
+    # -----------------------------------------------------------------------
     # Next step is starting the day
+
+
+
 
     # After all households and firms have performed their daily actions, the next day starts
