@@ -86,7 +86,15 @@ class household:
         demand c_h^r/21
         satisfy 
             1. Household's liquidity
-            2. 
+            2. Firm's inventory
+            
+        It decrease household's liquidity and increase firm's liquidity.
+
+        Customer adjustments is based on their liquidity.
+
+        If the firm's inventory where less than household demands
+        households satisfy from several firms.
+                
         """
 
         pass
@@ -316,8 +324,9 @@ if __name__ == "__main__":
             h.get_new_position(parent_firm = f, firms = firms) 
     # -----------------------------------------------------------------------
     # Next step is starting the day
-
-
+    for h in households:
+        sample_firms_group = random.sample(firms,random.randrange(1,10))
+        household.exec_demand(firms=sample_firms_group)
 
 
     # After all households and firms have performed their daily actions, the next day starts
