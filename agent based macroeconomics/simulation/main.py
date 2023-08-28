@@ -20,6 +20,7 @@ epoc = 500                      # years * 12
 mu = 0.019                      # U(0, 0.019)
 nu = 0.02                       # v(0, 0.02)
 
+
 households = []
 firms = []
 unemployed = []
@@ -47,10 +48,14 @@ class household:
     def consumption(self) -> int:
         return 0
 
-    def current_liquidity(self, m_t_1, income_t_1, spending_t_1) -> int:
-        m_t_h = m_t_1 + income_t_1 - spending_t_1
-        return m_t_h
-    
+    def get_liquidity(self):
+        return self.liquidity
+
+
+    # def current_liquidity(self, m_t_1, income_t_1, spending_t_1) -> int:
+    #     m_t_h = m_t_1 + income_t_1 - spending_t_1
+    #     return m_t_h
+
 
     # If the household is unemployed, he visits a randomly 
     # chosen firm to check whether there is an open position.
@@ -76,15 +81,14 @@ class household:
                     # connect to new firm
                     f.set_employee(f)
 
-    # daily action
+    # Daily action
     def exec_demand(self, firms):
-        """
-        Firms, picked in a random order to execute their goods demand
-        Each household visits one randomly determined firm of those
+        """Firms, picked in a random order to execute their goods demand
+        each household visits one randomly determined firm of those
         he has a connection with.
         
-        demand c_h^r/21
-        satisfy 
+        Demand c_h^r/21
+        Satisfy 
             1. Household's liquidity
             2. Firm's inventory
             
@@ -93,14 +97,28 @@ class household:
         Customer adjustments is based on their liquidity.
 
         If the firm's inventory where less than household demands
-        households satisfy from several firms.
-                
+        households satisfy from several firms.   
         """
 
-        pass
+        for f in firms:
+            demand = self.consumption / days_of_month
+
+            # Check liquidity of households
+            if demand > self.liquidity:
+                    demand = self.liquidity
+
+            finv = f.get_inventory()
+
+            if finv >= demand:
+                f.set_inventory(inventory= finv - demand)
+                f.increase_liquidity(delta= demand)
+                break
+            elif finv < demand:
+                f.set_inventory(inventory= demand - finv)
+                f.increase_liquidity(delta= demand)
     
 
-    # daily action
+    # Daily action
     def exec_(self):
         pass
 
@@ -111,7 +129,7 @@ class firm:
 
         self.fuid = uuid.uuid4()
 
-        self.liquidity = None
+        self.liquidity = 0
 
         self.wage = random.randrange(15080,89000,70)
 
@@ -119,7 +137,6 @@ class firm:
 
         # inventory critical bounds
         self.critical_inventory = [15080,(89000+15080)/2]
-
 
         # price critical bounds
         self.critical_price = [0,0]
@@ -141,7 +158,16 @@ class firm:
         self.next_month_fire = ''
 
     def get_fuid(self):
-        return self.fuid()
+        return self.fuid
+    
+    def get_inventory(self):
+        return self.inventory
+    
+    def set_inventory(self, inventory) -> None:
+        self.inventory = inventory
+
+    def increase_liquidity(self,delta):
+        self.liquidity = self.liquidity + delta
     
     def recruitment(self):
 
@@ -209,7 +235,7 @@ class firm:
                 return                   
             # 
             # this is my change price code
-            self.price = self.wage_t1 * (1+nu)
+            self.price = self.wage_t1 * (1 + nu)
             # 
 
 
@@ -326,7 +352,8 @@ if __name__ == "__main__":
     # Next step is starting the day
     for h in households:
         sample_firms_group = random.sample(firms,random.randrange(1,10))
-        household.exec_demand(firms=sample_firms_group)
+        h.exec_demand(firms=sample_firms_group)
 
 
-    # After all households and firms have performed their daily actions, the next day starts
+    # After all households and firms have performed their daily
+    # actions, the next day starts
