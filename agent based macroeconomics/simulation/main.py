@@ -19,6 +19,7 @@ days_of_month = 21              # days
 epoc = 500                      # years * 12
 mu = 0.019                      # U(0, 0.019)
 nu = 0.02                       # v(0, 0.02)
+_ex = 0.1                         # rate of buffer
 
 
 households = []
@@ -51,7 +52,8 @@ class household:
     def get_liquidity(self):
         return self.liquidity
 
-
+    def set_profit(self,profit):
+        self.liquidity = self.liquidity + profit
     # def current_liquidity(self, m_t_1, income_t_1, spending_t_1) -> int:
     #     m_t_h = m_t_1 + income_t_1 - spending_t_1
     #     return m_t_h
@@ -122,6 +124,9 @@ class household:
     def exec_(self):
         pass
 
+    def set_liquidity(self, liquidity):
+        self.liquidity = liquidity
+
 
 
 class firm:
@@ -130,6 +135,8 @@ class firm:
         self.fuid = uuid.uuid4()
 
         self.liquidity = 0
+
+        self.buffer = 0
 
         self.wage = random.randrange(15080,89000,70)
 
@@ -160,6 +167,9 @@ class firm:
     def get_fuid(self):
         return self.fuid
     
+    def get_employees(self):
+        return self.employees
+    
     def get_inventory(self):
         return self.inventory
     
@@ -185,7 +195,6 @@ class firm:
 
             # fire with one month delay
             self.next_month_fire = random.sample(self.employees,1)
-            
 
     def set_employees_group(self,group:list) -> None:
         self.employees = group
@@ -276,22 +285,57 @@ class firm:
         # we assume a production technology that is a linear function of labor input.
         return _lambda * self.get_num_labor()
 
-    # first order
-    def pay_wage(self):
-        pass
 
-    # second order
+    # First order
+    def pay_wage(self):
+        """ Add w_f to liquidity of households (Labors) and decrease liquidity of 
+            households.
+
+            * we assume that the firm's employees accept an immediate wage cut that 
+                is sufficient to keep the firm operating.
+
+            * If the labor income exceeds a household's reservation wage, is 
+                raised to the level of the received labor income. If the labor
+                income is lower than, the reservation wage is not changed.
+                Instead, the household intensifies his search for a better-paid job.
+            
+            * If a household has been unemployed during the last month,
+                his reservation wage for the next month is reduced by 10 percent.
+        """
+
+        
+        if self.liquidity < (self.wage * len(self.employees)):
+            print('warning: firm liquidity is not enough for paying labors\' wages')
+
+        self.liquidity = self.liquidity - (self.wage * len(self.employees))
+
+        for h in self.get_employees:
+            h.set_liquidity(self.wage)
+        
+
+
+    # Second order
     def build_buffer(self):
-        pass
-    
-    # third order
+        if self.liquidity < (_ex * (self.wage * len(self.employees))):
+            print('warning: firm liquidity is not enough for *Buffer reservation*')
+
+        self.buffer = _ex * (self.wage * len(self.employees))
+        self.liquidity = self.liquidity - self.buffer
+
+
+    # Third order
     def pay_profit(self):
         """all remaining liquidity of the firm is 
         distributed as profit among all households
         Rich households have higher claims on firms'
         profits than poor ones."""
-        pass
+        if self.liquidity < (_ex * (self.wage * len(self.employees))):
+            print('warning: firm liquidity is not enough for *pay profit*')
 
+
+        # because of simplicity uniform distribution of rofit
+        for h in self.employees:
+            h.set_profit(profit = self.liquidity/len(self.employees))
 
 
 
@@ -350,10 +394,21 @@ if __name__ == "__main__":
             h.get_new_position(parent_firm = f, firms = firms) 
     # -----------------------------------------------------------------------
     # Next step is starting the day
-    for h in households:
-        sample_firms_group = random.sample(firms,random.randrange(1,10))
-        h.exec_demand(firms=sample_firms_group)
 
+    # Loop of each days
+    for _ in range(days_of_month):
+        for h in households:
+            sample_firms_group = random.sample(firms,random.randrange(1,10))
+            h.exec_demand(firms=sample_firms_group)
+
+    # -----------------------------------------------------------------------
+    # End of the month
+
+    # After all 21 working days are performed, the month ends.
+    for f in firms:
+        f.pay_wage()
+        f.build_buffer()
+        f.pay_profit()
 
     # After all households and firms have performed their daily
     # actions, the next day starts
