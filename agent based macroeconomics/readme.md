@@ -121,7 +121,7 @@ $$
 f(l_f)=\lambda.l_f
 $$
 
-Consumption function, 
+Consumption function, which $`P^{I}_{h}`$ is the average goods price of all firms that household $`h`$ has a connection with.
 
 $$
 c_{h}^{r}=\left(\frac{m_{h}}{P^{I}_{h}}\right)^{\alpha}
