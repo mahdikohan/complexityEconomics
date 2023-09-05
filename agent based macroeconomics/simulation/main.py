@@ -14,7 +14,7 @@ import math
 
 # Initial variables
 num_households = 100
-num_firms = 10
+num_firms = 5
 _lambda = 3                     # positive technology parameter
 theta = 0.25                    # price change probability
 days_of_month = 21              # days
@@ -38,10 +38,10 @@ class household:
         self.huid = uuid.uuid4()
 
         # The reservation wage defines a minimal claim on labor income
-        self.wage = random.randrange(15080,89000,70)
+        self.wage = random.randrange(2000,8000,70)
 
         # The amount of monetary units the household currently possesses
-        self.liquidity = random.randrange(150000000,300000000,10)
+        self.liquidity = random.randrange(150000,300000,10)
 
         # Connected firms
         # Temporary considered connect firms to households
@@ -61,15 +61,15 @@ class household:
             pi.append(f.get_price())
 
         c = (self.liquidity/(sum(pi)/len(pi))) ** alpha
-        # if isinstance(c, complex):
-        #     print(f"it's complex c:{c}, liq:{self.liquidity}, P_I:{sum(pi)/len(pi)}, pi:{pi}")
+        if isinstance(c, complex):
+            print(f"it's complex c:{c}, liq:{self.liquidity}, P_I:{sum(pi)/len(pi)}, pi:{pi}")
         return c
 
     def get_liquidity(self):
         return self.liquidity
 
     def set_profit(self,profit):
-        self.liquidity = self.liquidity + profit
+        self.set_liquidity(self.liquidity + profit)
     
     # def current_liquidity(self, m_t_1, income_t_1, spending_t_1) -> int:
     #     m_t_h = m_t_1 + income_t_1 - spending_t_1
@@ -123,32 +123,36 @@ class household:
         """
 
         for f in firms:
-            demand = self.consumption(firms= firms) / days_of_month
-
-            # Check liquidity of households
             try:
+                demand = self.consumption(firms= firms) / days_of_month
+
+                # Check liquidity of households
+                
                 if demand > self.liquidity:
                         demand = self.liquidity
+                
+                finv = f.get_inventory()
+
+                if finv >= demand:
+                    f.set_inventory(inventory= finv - demand)
+                    f.increase_liquidity(delta= demand)
+                    break
+                elif finv < demand:
+                    f.set_inventory(inventory= demand - finv)
+                    f.increase_liquidity(delta= demand)
             except:
                 print(f'Exception raised for values, demand: {demand}, liquidity: {self.liquidity}')
 
-            finv = f.get_inventory()
-
-            if finv >= demand:
-                f.set_inventory(inventory= finv - demand)
-                f.increase_liquidity(delta= demand)
-                break
-            elif finv < demand:
-                f.set_inventory(inventory= demand - finv)
-                f.increase_liquidity(delta= demand)
-    
 
     # Daily action
     def exec_(self):
         pass
 
     def set_liquidity(self, liquidity):
-        self.liquidity = liquidity
+        if liquidity > 0:
+            self.liquidity = liquidity
+        else:
+            self.liquidity = 0
 
 
 
@@ -212,7 +216,7 @@ class firm:
         self.employees_Cap_t1 = self.employees_Cap
 
     def increase_liquidity(self,delta):
-        self.liquidity = self.liquidity + delta
+        self.set_liquidity(self.liquidity + delta)
     
     def recruitment(self):
 
@@ -239,6 +243,12 @@ class firm:
 
     def set_employee(self,labor):
         self.employees.append(labor)
+
+    def set_liquidity(self, liquidity):
+        if liquidity>0:
+            self.liquidity = liquidity
+        else:
+            self.liquidity = 0
 
     def disconnect_employee(self,huid = None) -> None:
         if huid != None:
@@ -267,7 +277,7 @@ class firm:
         how prices can be rigid and not change frequently."""
 
         # price adjusment
-        #             
+        # 
         if (self.inventory > self.critical_inventory[1]) \
             and (self.price > self.critical_price[1]):
             # Decrease price with prob \theta
@@ -309,6 +319,8 @@ class firm:
     def get_num_labor(self):
         return len(self.employees)
     
+    def set_wage_t1(self):
+        self.wage_t1 = self.wage
 
     def open_position_status(self):
         """An empty position is significantly related to the 
@@ -350,9 +362,10 @@ class firm:
         if self.liquidity < (self.wage * len(self.employees)):
             print('warning: firm liquidity is not enough for paying labors\' wages')
             # in this situation employees trying to find new job
-            self.liquidity = 0
+            self.set_liquidity(self.liquidity)
+
         else:
-            self.liquidity = self.liquidity - (self.wage * len(self.employees))
+            self.set_liquidity(self.liquidity - (self.wage * len(self.employees)))
 
         for h in self.employees:
             h.set_liquidity(self.wage)
@@ -365,7 +378,7 @@ class firm:
             print('warning: firm liquidity is not enough for *Buffer reservation*')
 
         self.buffer = _ex * (self.wage * len(self.employees))
-        self.liquidity = self.liquidity - self.buffer
+        self.set_liquidity(self.liquidity - self.buffer)
 
 
     # Third order
@@ -401,6 +414,7 @@ if __name__ == "__main__":
     result = []
     result_u = []
     result_i = []
+    result_p = []
     ife = math.floor(num_households/num_firms)
     # we considered equality is init state then, also all parameter
     # generated by the equal shares
@@ -456,7 +470,7 @@ if __name__ == "__main__":
         # -----------------------------------------------------------------------
         # End of the month
         # After all 21 working days are performed, the month ends.
-        result = []
+        # result = []
         for f in firms:
             f.pay_wage()
             f.build_buffer()
@@ -465,14 +479,19 @@ if __name__ == "__main__":
             # before starting new month
             f.disconnect_employee()
             f.set_employee_cap_t1()
+            f.set_wage_t1()
 
-            result.append([f.get_fuid(),len(f.get_employees())])
-
+            result.append([f.get_fuid(),len(f.get_employees()),f.get_wage(),f.get_price()])
+            
+        result_i.append(f.get_wage())
+        result_p.append(f.get_price())
         result_u.append(len(unemployed))
-        result_i.append(firm.get_price())
-    # df = pd.DataFrame(result,columns=['uid','l_f'])
+        
+
+    # df = pd.DataFrame(result,columns=['uid','l_f','wage','price'])
     # print(df)
-    plt.plot(result_i)
+    # df.to_csv(r'')
+    plt.plot(result_p)
     plt.show()
 
     print(f"count unemployed people {len(unemployed)}")
