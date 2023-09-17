@@ -14,11 +14,11 @@ import math
 
 # Initial variables
 num_households = 100
-num_firms = 5
+num_firms = 10
 _lambda = 3                     # positive technology parameter
 theta = 0.25                    # price change probability
 days_of_month = 21              # days
-num_month = 400
+num_month = 10
 epoc = 500                      # years * 12
 mu = 0.019                      # U(0, 0.019)
 nu = 0.02                       # v(0, 0.02)
@@ -161,13 +161,13 @@ class firm:
 
         self.fuid = uuid.uuid4()
 
-        self.liquidity = 0
+        self.liquidity = random.randrange(15080,89000,70)
 
         self.buffer = 0
 
-        self.wage = random.randrange(15080,89000,70)
+        self.wage = random.randrange(1508,8900,70)
 
-        self.wage_t1 = random.randrange(15080,89000,70)
+        self.wage_t1 = random.randrange(1508,8900,70)
 
         # inventory critical bounds
         self.critical_inventory = [15080,(89000+15080)/2]
@@ -261,9 +261,11 @@ class firm:
 
         elif huid == None:
             if len(self.next_month_fire) > 0:
+                print(f'**** fire an employee {len(self.next_month_fire)}')
                 for l in self.next_month_fire:
                     self.disconnect_employee(huid= l[0].get_huid())
                     self.employees_Cap = self.employees_Cap - 1
+                
         
 
     # ???? maybe has bug
@@ -307,9 +309,11 @@ class firm:
         # Wage adjustment
         if self.employees_Cap_t1 <= 0:             # condition of increase wage
             self.wage = self.wage_t1*(1+mu)
+            print(f'wage changed, It decreased {self.wage}')
 
         elif self.employees_Cap_t1 > 0:            # condition of decrease wage
             self.wage = self.wage_t1*(1-mu)
+            print(f'wage changed, It increased {self.wage}')
 
 
     def get_wage(self):
@@ -481,17 +485,17 @@ if __name__ == "__main__":
             f.set_employee_cap_t1()
             f.set_wage_t1()
 
-            result.append([f.get_fuid(),len(f.get_employees()),f.get_wage(),f.get_price()])
+            # result.append([f.get_fuid(),len(f.get_employees()),f.get_wage(),f.get_price()])
             
-        result_i.append(f.get_wage())
-        result_p.append(f.get_price())
-        result_u.append(len(unemployed))
+        # result_i.append(f.get_wage())
+        # result_p.append(f.get_price())
+        # result_u.append(len(unemployed))
         
 
     # df = pd.DataFrame(result,columns=['uid','l_f','wage','price'])
     # print(df)
     # df.to_csv(r'')
-    plt.plot(result_p)
-    plt.show()
+    # plt.plot(result_p)
+    # plt.show()
 
     print(f"count unemployed people {len(unemployed)}")
