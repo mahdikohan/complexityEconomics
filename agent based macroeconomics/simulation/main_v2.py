@@ -8,13 +8,7 @@ G = nx.Graph()
 # Define the number of firms and households
 num_firms = 10
 num_households = 100
-num_steps = 6  # Number of simulation steps
-
-
-
-
-
-
+num_steps = 10  # Number of simulation steps
 
 
 
@@ -72,6 +66,7 @@ plt.show()
 
 
 wage_households_1 = []
+production_firm_1 = []
 
 # Simulation loop
 for step in range(num_steps):
@@ -121,6 +116,9 @@ for step in range(num_steps):
                 if labor=="Household_1":
                     # print(G.nodes[labor]["liquidity"])
                     wage_households_1.append(G.nodes[labor]["liquidity"])
+
+            if firm_id == 1:
+                production_firm_1.append(G.nodes[f"Firm_{firm_id}"]["production"])
         else:
             print(f'Firm_{firm_id} Bankrupt')
 
@@ -128,10 +126,37 @@ for step in range(num_steps):
     # consumption
     for household_id in range(num_households):
 
-        # search a job position
-        for firm_id in random.sample(range(0, num_firms), math.floor(num_firms/2)):
-            pass
-            
+        # search a new job position
+        connected_firm = random.sample(range(0, num_firms), math.floor(num_firms/2))
+        total_price = 0
+        for firm_id in connected_firm:
+            total_price += G.nodes[f'Firm_{firm_id}']['price']
+        avg_price = total_price/len(connected_firm)
+
+        # buy things
+        for firm_id in connected_firm:
+            demand = ((G.nodes[f'Household_{firm_id}']['liquidity'] / avg_price)**0.9) / 21
+            consumption = demand * avg_price
+
+            if G.nodes[f'Firm_{firm_id}']['production'] > 0:
+                if G.nodes[f'Firm_{firm_id}']['production'] > demand:
+                    G.nodes[f'Household_{firm_id}']['liquidity'] -= consumption
+                    G.nodes[f'Firm_{firm_id}']['liquidity'] += consumption
+            else:
+                print(f"Firm_{firm_id}: production is zero")
+
+    
+    # production which is related to number of labor in firms
+    for firm_id in range(num_firms):
+        production = G.nodes[f"Firm_{firm_id}"]["production"]
+        G.nodes[f"Firm_{firm_id}"]['production'] = production + \
+            (G.degree(f"Firm_{firm_id}")/num_households)*production
+
+
+plt.plot(wage_households_1)
+plt.show()
+
+
 
 # Visualize the graph to show recruitment
 pos = nx.spring_layout(G)
