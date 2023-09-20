@@ -8,9 +8,9 @@ G = nx.Graph()
 # Define the number of firms and households
 num_firms = 10
 num_households = 100
-num_steps = 10  # Number of simulation steps
-_lambda = 10     # Fix of technology
-phi = 0.8      # demand production relation production = phi * demand
+num_steps = 50  # Number of simulation steps
+_lambda = 3     # Fix of technology
+phi = 0.25      # demand production relation production = phi * demand
 
 
 
@@ -126,9 +126,9 @@ for step in range(num_steps):
             for labor in labors:
                 G.nodes[f"Firm_{firm_id}"]["liquidity"] -= wage
                 G.nodes[labor]["liquidity"] += wage
-                if labor=="Household_1":
+                if labor=="Household_6":
                     wage_households_1.append(G.nodes[labor]["liquidity"])
-            if firm_id == 1:
+            if firm_id == 6:
                 production_firm_1.append(G.nodes[f"Firm_{firm_id}"]["production"])
         else:
             print(f'Firm_{firm_id} Bankrupt')
@@ -151,7 +151,7 @@ for step in range(num_steps):
         avg_price = total_price/len(connected_firm)
         # buy things
         for firm_id in connected_firm:
-            demand = ((G.nodes[f'Household_{household_id}']['liquidity'] / avg_price)**0.9)/num_steps
+            demand = ((G.nodes[f'Household_{household_id}']['liquidity'] / avg_price)**0.9)
             consumption = demand * avg_price
             G.nodes[f'Firm_{firm_id}']['recent_demand'] += demand
             if consumption > 0:
