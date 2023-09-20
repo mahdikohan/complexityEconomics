@@ -17,7 +17,7 @@ num_steps = 10  # Number of simulation steps
 for household_id in range(num_households):
     wage = random.uniform(2000, 6000)
     liquidity = random.uniform(5000, 30000)
-    demand = random.uniform(200, 1000)
+    demand = random.uniform(20, 100)
     household_attrs = {
         "type": "household",
         "wage": wage,
@@ -40,6 +40,9 @@ for firm_id in range(num_firms):
         "price": price
     }
     G.add_node(f"Firm_{firm_id}", **firm_attrs)
+
+
+
 
 
 # ============================ recruitment ==============================
@@ -97,7 +100,15 @@ for step in range(num_steps):
                     G.add_edge(f"Household_{household_id}",f"Firm_{firm_id}")
                     G.nodes[f"Firm_{firm_id}"]['wage'] = G.nodes[f"Household_{household_id}"]['wage']
 
-        
+
+
+    # production which is related to number of labor in firms
+    for firm_id in range(num_firms):
+        production = G.nodes[f"Firm_{firm_id}"]["production"]
+        G.nodes[f"Firm_{firm_id}"]['production'] = production + \
+            (G.degree(f"Firm_{firm_id}")/num_households)*production    
+
+
 
     # pay wage and adjust wage
     for firm_id in range(num_firms):
@@ -123,6 +134,7 @@ for step in range(num_steps):
             print(f'Firm_{firm_id} Bankrupt')
 
 
+
     # consumption
     for household_id in range(num_households):
 
@@ -135,25 +147,32 @@ for step in range(num_steps):
 
         # buy things
         for firm_id in connected_firm:
-            demand = ((G.nodes[f'Household_{firm_id}']['liquidity'] / avg_price)**0.9) / 21
+            demand = ((G.nodes[f'Household_{household_id}']['liquidity'] / avg_price)**0.9)/num_steps
             consumption = demand * avg_price
 
-            if G.nodes[f'Firm_{firm_id}']['production'] > 0:
-                if G.nodes[f'Firm_{firm_id}']['production'] > demand:
-                    G.nodes[f'Household_{firm_id}']['liquidity'] -= consumption
-                    G.nodes[f'Firm_{firm_id}']['liquidity'] += consumption
+            if consumption>0:
+
+                if G.nodes[f'Firm_{firm_id}']['production'] > 0:
+                    if G.nodes[f'Firm_{firm_id}']['production'] > demand:
+                        G.nodes[f'Household_{household_id}']['liquidity'] -= consumption
+                        G.nodes[f'Firm_{firm_id}']['liquidity'] += consumption
+                    elif G.nodes[f'Firm_{firm_id}']['production'] < demand:
+                        consumption -= G.nodes[f'Household_{household_id}']['liquidity'] 
+                        G.nodes[f'Firm_{firm_id}']['liquidity'] += consumption
+                        G.nodes[f'Household_{household_id}']['production'] = 0
+                else:
+                    print(f"Firm_{firm_id}: production is zero")
             else:
-                print(f"Firm_{firm_id}: production is zero")
+                print(f"Household_{household_id}: production is zero")
 
     
-    # production which is related to number of labor in firms
-    for firm_id in range(num_firms):
-        production = G.nodes[f"Firm_{firm_id}"]["production"]
-        G.nodes[f"Firm_{firm_id}"]['production'] = production + \
-            (G.degree(f"Firm_{firm_id}")/num_households)*production
-
 
 plt.plot(wage_households_1)
+plt.title('Wage')
+plt.show()
+
+plt.plot(production_firm_1)
+plt.title('Production')
 plt.show()
 
 
