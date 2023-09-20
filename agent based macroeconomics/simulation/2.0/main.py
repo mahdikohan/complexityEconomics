@@ -9,6 +9,8 @@ G = nx.Graph()
 num_firms = 10
 num_households = 100
 num_steps = 10  # Number of simulation steps
+_lambda = 10     # Fix of technology
+phi = 0.8      # demand production relation production = phi * demand
 
 
 
@@ -23,6 +25,7 @@ for household_id in range(num_households):
         "wage": wage,
         "liquidity": liquidity,
         "demand": demand,
+        "labors":[]
     }
     G.add_node(f"Household_{household_id}", **household_attrs)
 
@@ -32,12 +35,20 @@ for firm_id in range(num_firms):
     liquidity = random.uniform(1000000, 5000000)
     production = random.uniform(100, 500)
     price = random.uniform(10,20)
+    low_production = random.randint(1, 100)
+    production_boundray = [low_production, random.randint(low_production + 1, 550)]
+    recent_demand =random.uniform(20, 100)
+    recent_production = random.uniform(100, 500)
+
     firm_attrs = {
         "type": "firm",
         "wage": wage,
         "liquidity": liquidity,
         "production": production,
-        "price": price
+        "recent_production": recent_production,
+        "production_boundary": production_boundray,
+        "price": price,
+        "recent_demand": recent_demand
     }
     G.add_node(f"Firm_{firm_id}", **firm_attrs)
 
@@ -50,16 +61,16 @@ j = 0
 for firm_id in range(num_firms):
     # Randomly recruit a number of households
     i = random.randint(5,math.floor(num_households/num_firms)+1)
-    
     if j<num_households:
         for recruit in range(j,j+i):
-            # print(firm_id,recruit)
             G.add_edge(f"Firm_{firm_id}", f"Household_{recruit}")
     j = j+i
 
-# # checking number of firms for each households
-# for firm_id in range(num_firms):
-#     print(G.degree(f"Firm_{firm_id}"))
+
+# set known employees
+for households_id in range(num_households):
+    connected_firm = random.sample(range(0, num_firms), math.floor(num_firms/2))
+    G.nodes[f"Household_{recruit}"]["recent_demand"] = connected_firm
 
 
 pos = nx.spring_layout(G)
@@ -78,22 +89,15 @@ for step in range(num_steps):
 
     # each households check some firms wage
     for household_id in range(num_households):
-
         # search a job position
         for firm_id in random.sample(range(0, num_firms), math.floor(num_firms/2)):
             if G.nodes[f"Firm_{firm_id}"]['liquidity'] < 0:
                 G.remove_edges_from(list(G.edges(f"Firm_{firm_id}")))
-                
-
             elif G.degree(f"Household_{household_id}") > 0 and (G.nodes[f"Firm_{firm_id}"]['wage']) > (G.nodes[f"Household_{household_id}"]['wage']):
                 # print(f'new connection household_{household_id}, firm_{firm_id}')
                 G.remove_edges_from(list(G.edges(f"Household_{household_id}")))
                 G.add_edge(f"Household_{household_id}",f"Firm_{firm_id}")
-                G.nodes[f"Firm_{firm_id}"]['wage'] = G.nodes[f"Household_{household_id}"]['wage']
-                
-
-            # print('*** Degree: '+str(G.degree(f"Household_{household_id}")))
-            
+                G.nodes[f"Firm_{firm_id}"]['wage'] = G.nodes[f"Household_{household_id}"]['wage']            
             elif G.degree(f"Household_{household_id}") == 0:
                 # print(f'unemployment new connection household_{household_id}, firm_{firm_id}')
                 if G.nodes[f"Firm_{firm_id}"]['wage'] > 0:
@@ -104,30 +108,26 @@ for step in range(num_steps):
 
     # production which is related to number of labor in firms
     for firm_id in range(num_firms):
-        production = G.nodes[f"Firm_{firm_id}"]["production"]
-        G.nodes[f"Firm_{firm_id}"]['production'] = production + \
-            (G.degree(f"Firm_{firm_id}")/num_households)*production    
+        # adjust production
+        G.nodes[f"Firm_{firm_id}"]["recent_production"] = phi * G.nodes[f"Firm_{firm_id}"]["recent_demand"]
+        # new production
+        recent_production = G.nodes[f"Firm_{firm_id}"]["recent_production"]
+        G.nodes[f"Firm_{firm_id}"]['production'] = recent_production + _lambda*(G.degree(f"Firm_{firm_id}"))    
 
 
 
-    # pay wage and adjust wage
+    # pay wage and adjust wage households
     for firm_id in range(num_firms):
         liquidity = G.nodes[f"Firm_{firm_id}"]["liquidity"]
         print(f"liquidity of Firm_{firm_id}: {liquidity}")
         if liquidity > 0:
             labors = G.neighbors(f"Firm_{firm_id}")
-            # wage = G.nodes[f"Firm_{firm_id}"]["liquidity"] / G.degree(f"Firm_{firm_id}") 
-
             G.nodes[f"Firm_{firm_id}"]['wage'] = wage
-            
             for labor in labors:
                 G.nodes[f"Firm_{firm_id}"]["liquidity"] -= wage
                 G.nodes[labor]["liquidity"] += wage
-
                 if labor=="Household_1":
-                    # print(G.nodes[labor]["liquidity"])
                     wage_households_1.append(G.nodes[labor]["liquidity"])
-
             if firm_id == 1:
                 production_firm_1.append(G.nodes[f"Firm_{firm_id}"]["production"])
         else:
@@ -135,23 +135,26 @@ for step in range(num_steps):
 
 
 
+
+
+    # preparing for update recent demand
+    for firm_id in connected_firm:
+            G.nodes[f'Firm_{firm_id}']['recent_demand'] = 0
+
     # consumption
     for household_id in range(num_households):
-
-        # search a new job position
+        # random selection for connection
         connected_firm = random.sample(range(0, num_firms), math.floor(num_firms/2))
         total_price = 0
         for firm_id in connected_firm:
             total_price += G.nodes[f'Firm_{firm_id}']['price']
         avg_price = total_price/len(connected_firm)
-
         # buy things
         for firm_id in connected_firm:
             demand = ((G.nodes[f'Household_{household_id}']['liquidity'] / avg_price)**0.9)/num_steps
             consumption = demand * avg_price
-
-            if consumption>0:
-
+            G.nodes[f'Firm_{firm_id}']['recent_demand'] += demand
+            if consumption > 0:
                 if G.nodes[f'Firm_{firm_id}']['production'] > 0:
                     if G.nodes[f'Firm_{firm_id}']['production'] > demand:
                         G.nodes[f'Household_{household_id}']['liquidity'] -= consumption
@@ -164,6 +167,10 @@ for step in range(num_steps):
                     print(f"Firm_{firm_id}: production is zero")
             else:
                 print(f"Household_{household_id}: production is zero")
+
+    # adjust price:
+    for firm_id in range(num_firms):
+        pass
 
     
 
