@@ -3,12 +3,15 @@ import random
 import matplotlib.pyplot as plt
 import math
 
+plot_state = True
+report_state = True
+
 # Create an empty graph
 G = nx.Graph()
 # Define the number of firms and households
-num_firms = 10
-num_households = 100
-num_steps = 50  # Number of simulation steps
+num_firms = 100
+num_households = 1000
+num_steps = 300  # Number of simulation steps
 _lambda = 3     # Fix of technology
 phi = 0.25      # demand production relation production = phi * demand
 
@@ -18,7 +21,7 @@ phi = 0.25      # demand production relation production = phi * demand
 # Initialize households with attributes and add them to the graph
 for household_id in range(num_households):
     wage = random.uniform(2000, 6000)
-    liquidity = random.uniform(5000, 30000)
+    liquidity = random.uniform(50000, 300000)
     demand = random.uniform(20, 100)
     household_attrs = {
         "type": "household",
@@ -32,7 +35,7 @@ for household_id in range(num_households):
 # Initialize firms with attributes and add them to the graph
 for firm_id in range(num_firms):
     wage = random.uniform(30000, 70000)
-    liquidity = random.uniform(1000000, 5000000)
+    liquidity = random.uniform(10000000, 50000000)
     production = random.uniform(100, 500)
     price = random.uniform(10,20)
     low_production = random.randint(1, 100)
@@ -73,19 +76,21 @@ for households_id in range(num_households):
     G.nodes[f"Household_{recruit}"]["recent_demand"] = connected_firm
 
 
-pos = nx.spring_layout(G)
-node_colors = ['skyblue' if G.nodes[node]['type'] == "household" else 'red' for node in G.nodes()]
-nx.draw(G, pos, with_labels=True, node_color=node_colors, font_color='black', node_size=800)
-plt.show()
+if plot_state==True:
+    pos = nx.spring_layout(G)
+    node_colors = ['skyblue' if G.nodes[node]['type'] == "household" else 'red' for node in G.nodes()]
+    nx.draw(G, pos, with_labels=True, node_color=node_colors, font_color='black', node_size=800)
+    plt.show()
 
 
 wage_households_1 = []
 production_firm_1 = []
+unemployment_rate = []
 
 # Simulation loop
 for step in range(num_steps):
-    print(f"Step {step + 1}: Done")
-    print('===========================')
+    print(f"Step {step + 1}: Starting")
+    print('====================================')
 
     # each households check some firms wage
     for household_id in range(num_households):
@@ -97,12 +102,18 @@ for step in range(num_steps):
                 # print(f'new connection household_{household_id}, firm_{firm_id}')
                 G.remove_edges_from(list(G.edges(f"Household_{household_id}")))
                 G.add_edge(f"Household_{household_id}",f"Firm_{firm_id}")
-                G.nodes[f"Firm_{firm_id}"]['wage'] = G.nodes[f"Household_{household_id}"]['wage']            
-            elif G.degree(f"Household_{household_id}") == 0:
+                G.nodes[f"Firm_{firm_id}"]['wage'] = G.nodes[f"Household_{household_id}"]['wage']
+            elif (G.nodes[f"Firm_{firm_id}"]['wage']) > (G.nodes[f"Household_{household_id}"]['wage']):
+                G.add_edge(f"Household_{household_id}",f"Firm_{firm_id}")
+                G.nodes[f"Firm_{firm_id}"]['wage'] = G.nodes[f"Household_{household_id}"]['wage']
+        if G.degree(f"Household_{household_id}") == 0:
+            if G.nodes[f"Household_{household_id}"]['wage'] > 0:
+                G.nodes[f"Household_{household_id}"]['wage'] = 0.9 * G.nodes[f"Household_{household_id}"]['wage']
+                # =============================================================================
                 # print(f'unemployment new connection household_{household_id}, firm_{firm_id}')
-                if G.nodes[f"Firm_{firm_id}"]['wage'] > 0:
-                    G.add_edge(f"Household_{household_id}",f"Firm_{firm_id}")
-                    G.nodes[f"Firm_{firm_id}"]['wage'] = G.nodes[f"Household_{household_id}"]['wage']
+                # if G.nodes[f"Firm_{firm_id}"]['wage'] > 0:
+                #     G.add_edge(f"Household_{household_id}",f"Firm_{firm_id}")
+                #     G.nodes[f"Firm_{firm_id}"]['wage'] = G.nodes[f"Household_{household_id}"]['wage']
 
 
 
@@ -119,7 +130,7 @@ for step in range(num_steps):
     # pay wage and adjust wage households
     for firm_id in range(num_firms):
         liquidity = G.nodes[f"Firm_{firm_id}"]["liquidity"]
-        print(f"liquidity of Firm_{firm_id}: {liquidity}")
+        # print(f"liquidity of Firm_{firm_id}: {liquidity}")
         if liquidity > 0:
             labors = G.neighbors(f"Firm_{firm_id}")
             G.nodes[f"Firm_{firm_id}"]['wage'] = wage
@@ -139,7 +150,7 @@ for step in range(num_steps):
 
     # preparing for update recent demand
     for firm_id in connected_firm:
-            G.nodes[f'Firm_{firm_id}']['recent_demand'] = 0
+        G.nodes[f'Firm_{firm_id}']['recent_demand'] = 0
 
     # consumption
     for household_id in range(num_households):
@@ -152,40 +163,64 @@ for step in range(num_steps):
         # buy things
         for firm_id in connected_firm:
             demand = ((G.nodes[f'Household_{household_id}']['liquidity'] / avg_price)**0.9)
+            # print('==============demand of consumer==============')
+            # print(G.nodes[f'Household_{household_id}'], f'price: {avg_price}')
+            # input()
             consumption = demand * avg_price
             G.nodes[f'Firm_{firm_id}']['recent_demand'] += demand
-            if consumption > 0:
-                if G.nodes[f'Firm_{firm_id}']['production'] > 0:
+            # if type(consumption)==complex:
+                # print(f"consumprion is complex Household_{household_id}")
+                # print(G.nodes[f'Household_{household_id}'])
+                # input()
+            if type(consumption)!= complex and consumption > 0:
+                firm_production = G.nodes[f'Firm_{firm_id}']['production']
+                if type(firm_production) != complex and firm_production > 0:
                     if G.nodes[f'Firm_{firm_id}']['production'] > demand:
                         G.nodes[f'Household_{household_id}']['liquidity'] -= consumption
                         G.nodes[f'Firm_{firm_id}']['liquidity'] += consumption
                     elif G.nodes[f'Firm_{firm_id}']['production'] < demand:
                         consumption -= G.nodes[f'Household_{household_id}']['liquidity'] 
                         G.nodes[f'Firm_{firm_id}']['liquidity'] += consumption
-                        G.nodes[f'Household_{household_id}']['production'] = 0
+                        G.nodes[f'Firm_{firm_id}']['production'] = 0
                 else:
+                    break
                     print(f"Firm_{firm_id}: production is zero")
             else:
-                print(f"Household_{household_id}: production is zero")
+                print(f"Household_{household_id}: consumption is zero")
+                break
+
+    unem_c = 0
+    for household_id in range(num_households):
+        if G.degree(f"Household_{household_id}")==0:
+            unem_c += 1
+    
+    u_r = unem_c / num_households * 100
+    unemployment_rate.append(u_r)
+    print(f'unemployment rate: {u_r} %')
+    print('==============================')
 
     # adjust price:
     for firm_id in range(num_firms):
         pass
 
     
+if plot_state==True:
+    plt.plot(wage_households_1)
+    plt.title('Wage')
+    plt.show()
 
-plt.plot(wage_households_1)
-plt.title('Wage')
-plt.show()
-
-plt.plot(production_firm_1)
-plt.title('Production')
-plt.show()
+    plt.plot(production_firm_1)
+    plt.title('Production')
+    plt.show()
 
 
 
-# Visualize the graph to show recruitment
-pos = nx.spring_layout(G)
-node_colors = ['skyblue' if G.nodes[node]['type'] == "household" else 'yellow' for node in G.nodes()]
-nx.draw(G, pos, with_labels=True, node_color=node_colors, font_color='black', node_size=800)
-plt.show()
+    # Visualize the graph to show recruitment
+    pos = nx.spring_layout(G)
+    node_colors = ['skyblue' if G.nodes[node]['type'] == "household" else 'yellow' for node in G.nodes()]
+    nx.draw(G, pos, with_labels=True, node_color=node_colors, font_color='black', node_size=800)
+    plt.show()
+
+
+if report_state == True:  
+    print(f'unemployment rate: {sum(unemployment_rate)/len(unemployment_rate)} %')
