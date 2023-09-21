@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import math
 
 plot_state = True
+graph_state = False
 report_state = True
 
 # Create an empty graph
@@ -11,7 +12,7 @@ G = nx.Graph()
 # Define the number of firms and households
 num_firms = 100
 num_households = 1000
-num_steps = 300  # Number of simulation steps
+num_steps = 800  # Number of simulation steps
 _lambda = 3     # Fix of technology
 phi = 0.25      # demand production relation production = phi * demand
 
@@ -39,7 +40,9 @@ for firm_id in range(num_firms):
     production = random.uniform(100, 500)
     price = random.uniform(10,20)
     low_production = random.randint(1, 100)
-    production_boundray = [low_production, random.randint(low_production + 1, 550)]
+    low_price = random.randint(1,10)
+    price_boundary = [low_price, random.randint(low_price + 1,25)]
+    production_boundary = [low_production, random.randint(low_production + 1, 550)]
     recent_demand =random.uniform(20, 100)
     recent_production = random.uniform(100, 500)
 
@@ -49,7 +52,8 @@ for firm_id in range(num_firms):
         "liquidity": liquidity,
         "production": production,
         "recent_production": recent_production,
-        "production_boundary": production_boundray,
+        "price_boundary": price_boundary,
+        "production_boundary": production_boundary,
         "price": price,
         "recent_demand": recent_demand
     }
@@ -76,7 +80,7 @@ for households_id in range(num_households):
     G.nodes[f"Household_{recruit}"]["recent_demand"] = connected_firm
 
 
-if plot_state==True:
+if plot_state==True and graph_state==True:
     pos = nx.spring_layout(G)
     node_colors = ['skyblue' if G.nodes[node]['type'] == "household" else 'red' for node in G.nodes()]
     nx.draw(G, pos, with_labels=True, node_color=node_colors, font_color='black', node_size=800)
@@ -86,6 +90,7 @@ if plot_state==True:
 wage_households_1 = []
 production_firm_1 = []
 unemployment_rate = []
+Bankrupt_rate = []
 
 # Simulation loop
 for step in range(num_steps):
@@ -98,7 +103,8 @@ for step in range(num_steps):
         for firm_id in random.sample(range(0, num_firms), math.floor(num_firms/2)):
             if G.nodes[f"Firm_{firm_id}"]['liquidity'] < 0:
                 G.remove_edges_from(list(G.edges(f"Firm_{firm_id}")))
-            elif G.degree(f"Household_{household_id}") > 0 and (G.nodes[f"Firm_{firm_id}"]['wage']) > (G.nodes[f"Household_{household_id}"]['wage']):
+            elif G.degree(f"Household_{household_id}") > 0 and \
+                  (G.nodes[f"Firm_{firm_id}"]['wage']) > (G.nodes[f"Household_{household_id}"]['wage']):
                 # print(f'new connection household_{household_id}, firm_{firm_id}')
                 G.remove_edges_from(list(G.edges(f"Household_{household_id}")))
                 G.add_edge(f"Household_{household_id}",f"Firm_{firm_id}")
@@ -123,11 +129,43 @@ for step in range(num_steps):
         G.nodes[f"Firm_{firm_id}"]["recent_production"] = phi * G.nodes[f"Firm_{firm_id}"]["recent_demand"]
         # new production
         recent_production = G.nodes[f"Firm_{firm_id}"]["recent_production"]
-        G.nodes[f"Firm_{firm_id}"]['production'] = recent_production + _lambda*(G.degree(f"Firm_{firm_id}"))    
+        G.nodes[f"Firm_{firm_id}"]['production'] = recent_production + _lambda*(G.degree(f"Firm_{firm_id}"))
+
+        
+        # labor adjustment with production status and price adjustment
+        if type(recent_production) == complex:
+            continue
+        if G.degree(f"Firm_{firm_id}") > 1:
+            # print(G.nodes[f"Firm_{firm_id}"])
+            firm_production_adj_part = G.nodes[f"Firm_{firm_id}"]['production']
+            firm_price_adj_part = G.nodes[f"Firm_{firm_id}"]['price']
+            firm_low_production_adj_part = G.nodes[f"Firm_{firm_id}"]['production_boundary'][0]
+            firm_high_production_adj_part = G.nodes[f"Firm_{firm_id}"]['production_boundary'][1]
+            firm_high_price_adj_part = G.nodes[f"Firm_{firm_id}"]['price_boundary'][0]
+            firm_low_price_adj_part = G.nodes[f"Firm_{firm_id}"]['price_boundary'][1]
+            if firm_production_adj_part > firm_high_production_adj_part:
+                fire_adj_part = random.choice(list(G.neighbors(f"Firm_{firm_id}")))
+                G.remove_edge(f"Firm_{firm_id}", fire_adj_part)
+                if firm_price_adj_part > firm_high_price_adj_part:
+                    G.nodes[f"Firm_{firm_id}"]['price'] = firm_price_adj_part * (1+random.uniform(0.1,0.4))
+                elif firm_price_adj_part < firm_low_price_adj_part:
+                    G.nodes[f"Firm_{firm_id}"]['price'] = firm_price_adj_part * (1-random.uniform(0.1,0.4))
+            elif firm_production_adj_part < firm_low_production_adj_part:
+                # *temporary* is this we should add accurasy to it
+                list_of_unmployed = [node for node in G.nodes() if G.degree(node) == 0 and G.nodes[node]['type'] == 'household']
+                if list_of_unmployed:
+                    hire_adj_part = random.choice(list_of_unmployed)
+                G.add_edge(f"Firm_{firm_id}", hire_adj_part)
+                G.nodes[hire_adj_part]['wage'] = G.nodes[f"Firm_{firm_id}"]['wage']
+                if firm_price_adj_part > firm_high_price_adj_part:
+                    G.nodes[f"Firm_{firm_id}"]['price'] = firm_price_adj_part * (1+random.uniform(0.1,0.4))
+                elif firm_price_adj_part < firm_low_price_adj_part:
+                    G.nodes[f"Firm_{firm_id}"]['price'] = firm_price_adj_part * (1-random.uniform(0.1,0.4))
 
 
 
     # pay wage and adjust wage households
+    Bankrupt_c = 0
     for firm_id in range(num_firms):
         liquidity = G.nodes[f"Firm_{firm_id}"]["liquidity"]
         # print(f"liquidity of Firm_{firm_id}: {liquidity}")
@@ -137,13 +175,19 @@ for step in range(num_steps):
             for labor in labors:
                 G.nodes[f"Firm_{firm_id}"]["liquidity"] -= wage
                 G.nodes[labor]["liquidity"] += wage
+
+            # ===================collecting plot data=============================
                 if labor=="Household_6":
                     wage_households_1.append(G.nodes[labor]["liquidity"])
+
             if firm_id == 6:
                 production_firm_1.append(G.nodes[f"Firm_{firm_id}"]["production"])
-        else:
-            print(f'Firm_{firm_id} Bankrupt')
+            # ====================================================================
 
+        else:
+            Bankrupt_c += 1
+            print(f'Firm_{firm_id} Bankrupt')
+    Bankrupt_rate.append(Bankrupt_c/num_firms*100)
 
 
 
@@ -186,8 +230,11 @@ for step in range(num_steps):
                     break
                     print(f"Firm_{firm_id}: production is zero")
             else:
-                print(f"Household_{household_id}: consumption is zero")
                 break
+                print(f"Household_{household_id}: consumption is zero")
+                
+
+
 
     unem_c = 0
     for household_id in range(num_households):
@@ -199,10 +246,6 @@ for step in range(num_steps):
     print(f'unemployment rate: {u_r} %')
     print('==============================')
 
-    # adjust price:
-    for firm_id in range(num_firms):
-        pass
-
     
 if plot_state==True:
     plt.plot(wage_households_1)
@@ -213,8 +256,15 @@ if plot_state==True:
     plt.title('Production')
     plt.show()
 
+    plt.plot(unemployment_rate)
+    plt.title('unemployment rate')
+    plt.show()
 
+    plt.plot(Bankrupt_rate)
+    plt.title('Bankrupt rate')
+    plt.show()
 
+if plot_state==True and graph_state==True:
     # Visualize the graph to show recruitment
     pos = nx.spring_layout(G)
     node_colors = ['skyblue' if G.nodes[node]['type'] == "household" else 'yellow' for node in G.nodes()]
@@ -224,3 +274,4 @@ if plot_state==True:
 
 if report_state == True:  
     print(f'unemployment rate: {sum(unemployment_rate)/len(unemployment_rate)} %')
+    print(f'Bankrupt rate: {sum(Bankrupt_rate)/len(Bankrupt_rate)} %')
