@@ -4,13 +4,14 @@ import matplotlib.pyplot as plt
 import math
 
 plot_state = True
-graph_state = False
-report_state = True
+graph_state = True
+report_state = False
 
 # Create an empty graph
 G = nx.Graph()
 # Define the number of firms and households
 num_firms = 100
+num_connected_firms = 10
 num_households = 1000
 num_steps = 800  # Number of simulation steps
 _lambda = 3     # Fix of technology
@@ -55,7 +56,9 @@ for firm_id in range(num_firms):
         "price_boundary": price_boundary,
         "production_boundary": production_boundary,
         "price": price,
-        "recent_demand": recent_demand
+        "recent_demand": recent_demand,
+        "recent_hiring": "",      # satisfy or unsatisfy
+        "free_position": 0
     }
     G.add_node(f"Firm_{firm_id}", **firm_attrs)
 
@@ -76,8 +79,8 @@ for firm_id in range(num_firms):
 
 # set known employees
 for households_id in range(num_households):
-    connected_firm = random.sample(range(0, num_firms), math.floor(num_firms/2))
-    G.nodes[f"Household_{recruit}"]["recent_demand"] = connected_firm
+    connected_firm = random.sample(range(0, num_firms), num_connected_firms)
+    G.nodes[f"Household_{households_id}"]["labors"] = connected_firm
 
 
 if plot_state==True and graph_state==True:
@@ -199,13 +202,16 @@ for step in range(num_steps):
     # consumption
     for household_id in range(num_households):
         # random selection for connection
-        connected_firm = random.sample(range(0, num_firms), math.floor(num_firms/2))
+        # connected_firm = random.sample(range(0, num_firms), math.floor(num_firms/2))
+        connected_firm = G.nodes[f'Household_{household_id}']["labors"]
         total_price = 0
         for firm_id in connected_firm:
             total_price += G.nodes[f'Firm_{firm_id}']['price']
         avg_price = total_price/len(connected_firm)
+        # we did it for uniform distribution of sellers
+        sample_firms = random.sample(connected_firm, len(connected_firm))
         # buy things
-        for firm_id in connected_firm:
+        for firm_id in sample_firms:
             demand = ((G.nodes[f'Household_{household_id}']['liquidity'] / avg_price)**0.9)
             # print('==============demand of consumer==============')
             # print(G.nodes[f'Household_{household_id}'], f'price: {avg_price}')
@@ -234,11 +240,28 @@ for step in range(num_steps):
                 print(f"Household_{household_id}: consumption is zero")
                 
 
+    # cheaper places to buy
+    for household_id in range(num_households):
+        connected_firm = G.nodes[f"Household_{household_id}"]["labors"]
+        while True:
+            chosen_firm = random.choice(range(0, num_firms))
+            if chosen_firm not in connected_firm:
+                for firm_id in connected_firm:
+                    connected_firm_price = G.nodes[f"Firm_{firm_id}"]["price"]
+                    if connected_firm_price > G.nodes[f"Firm_{chosen_firm}"]["price"]:
+                        connected_firm.remove(firm_id)
+                        connected_firm.append(chosen_firm)
+                        # report
+                        if report_state == True:
+                            print(f"firm {firm_id} replaced by firm {chosen_firm} in households {household_id}")
+
+                        break
+                break
 
 
     unem_c = 0
     for household_id in range(num_households):
-        if G.degree(f"Household_{household_id}")==0:
+        if G.degree(f"Household_{household_id}") == 0:
             unem_c += 1
     
     u_r = unem_c / num_households * 100
