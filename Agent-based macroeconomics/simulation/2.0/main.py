@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import math
 
 plot_state = True
-graph_state = True
+graph_state = False
 report_state = False
 
 # Create an empty graph
@@ -13,17 +13,17 @@ G = nx.Graph()
 num_firms = 100
 num_connected_firms = 10
 num_households = 1000
-num_steps = 800  # Number of simulation steps
+num_steps = 500  # Number of simulation steps
 _lambda = 3     # Fix of technology
 phi = 0.25      # demand production relation production = phi * demand
-
+init_invest = 6 # initial investment for 6 monthes
 
 
 
 # Initialize households with attributes and add them to the graph
 for household_id in range(num_households):
     wage = random.uniform(2000, 6000)
-    liquidity = random.uniform(50000, 300000)
+    liquidity = random.uniform(3000, 5000)
     demand = random.uniform(20, 100)
     household_attrs = {
         "type": "household",
@@ -36,7 +36,7 @@ for household_id in range(num_households):
 
 # Initialize firms with attributes and add them to the graph
 for firm_id in range(num_firms):
-    wage = random.uniform(30000, 70000)
+    wage = random.uniform(3000, 7000)
     liquidity = random.uniform(10000000, 50000000)
     production = random.uniform(100, 500)
     price = random.uniform(10,20)
@@ -70,8 +70,9 @@ for firm_id in range(num_firms):
 j = 0
 for firm_id in range(num_firms):
     # Randomly recruit a number of households
-    i = random.randint(5,math.floor(num_households/num_firms)+1)
-    if j<num_households:
+    max_i = min([math.floor(G.nodes[f"Firm_{firm_id}"]["liquidity"] / G.nodes[f"Firm_{firm_id}"]["wage"] / init_invest), 10])
+    i = random.randint(math.floor(max_i/2),max_i)
+    if j+i < num_households:
         for recruit in range(j,j+i):
             G.add_edge(f"Firm_{firm_id}", f"Household_{recruit}")
     j = j+i
@@ -90,15 +91,15 @@ if plot_state==True and graph_state==True:
     plt.show()
 
 
-wage_households_1 = []
-production_firm_1 = []
+wage_households_test = []
+production_firm_test = []
+liquidity_households_test = []
 unemployment_rate = []
 Bankrupt_rate = []
 
 # Simulation loop
 for step in range(num_steps):
     print(f"Step {step + 1}: Starting")
-    print('====================================')
 
     # each households check some firms wage
     for household_id in range(num_households):
@@ -168,7 +169,6 @@ for step in range(num_steps):
 
 
     # pay wage and adjust wage households
-    Bankrupt_c = 0
     for firm_id in range(num_firms):
         liquidity = G.nodes[f"Firm_{firm_id}"]["liquidity"]
         # print(f"liquidity of Firm_{firm_id}: {liquidity}")
@@ -181,16 +181,16 @@ for step in range(num_steps):
 
             # ===================collecting plot data=============================
                 if labor=="Household_6":
-                    wage_households_1.append(G.nodes[labor]["liquidity"])
+                    wage_households_test.append(G.nodes[labor]["wage"])
+                    liquidity_households_test.append(G.nodes[labor]["liquidity"])
 
             if firm_id == 6:
-                production_firm_1.append(G.nodes[f"Firm_{firm_id}"]["production"])
+                production_firm_test.append(G.nodes[f"Firm_{firm_id}"]["production"])
             # ====================================================================
 
         else:
-            Bankrupt_c += 1
-            print(f'Firm_{firm_id} Bankrupt')
-    Bankrupt_rate.append(Bankrupt_c/num_firms*100)
+            if report_state == True:
+                print(f'Firm_{firm_id} Bankrupt')
 
 
 
@@ -201,6 +201,9 @@ for step in range(num_steps):
 
     # consumption
     for household_id in range(num_households):
+        # if G.nodes[f'Household_{household_id}']["liquidity"] < 0:
+        #     break
+        # print(f'h {household_id}:',G.nodes[f'Household_{household_id}']["liquidity"]) 
         # random selection for connection
         # connected_firm = random.sample(range(0, num_firms), math.floor(num_firms/2))
         connected_firm = G.nodes[f'Household_{household_id}']["labors"]
@@ -208,6 +211,9 @@ for step in range(num_steps):
         for firm_id in connected_firm:
             total_price += G.nodes[f'Firm_{firm_id}']['price']
         avg_price = total_price/len(connected_firm)
+
+        # print(f'avg price {avg_price}')
+        # input()
         # we did it for uniform distribution of sellers
         sample_firms = random.sample(connected_firm, len(connected_firm))
         # buy things
@@ -219,25 +225,26 @@ for step in range(num_steps):
             consumption = demand * avg_price
             G.nodes[f'Firm_{firm_id}']['recent_demand'] += demand
             # if type(consumption)==complex:
-                # print(f"consumprion is complex Household_{household_id}")
-                # print(G.nodes[f'Household_{household_id}'])
-                # input()
-            if type(consumption)!= complex and consumption > 0:
+            #     print(f"consumprion is complex Household_{household_id}")
+            #     print(G.nodes[f'Household_{household_id}'])
+            #     input()
+            if type(consumption)!= complex and consumption > 0 and \
+                G.nodes[f'Household_{household_id}']['liquidity'] - consumption > 0:
                 firm_production = G.nodes[f'Firm_{firm_id}']['production']
                 if type(firm_production) != complex and firm_production > 0:
                     if G.nodes[f'Firm_{firm_id}']['production'] > demand:
                         G.nodes[f'Household_{household_id}']['liquidity'] -= consumption
                         G.nodes[f'Firm_{firm_id}']['liquidity'] += consumption
                     elif G.nodes[f'Firm_{firm_id}']['production'] < demand:
-                        consumption -= G.nodes[f'Household_{household_id}']['liquidity'] 
+                        consumption = 0.1*consumption - G.nodes[f'Household_{household_id}']['liquidity'] 
                         G.nodes[f'Firm_{firm_id}']['liquidity'] += consumption
                         G.nodes[f'Firm_{firm_id}']['production'] = 0
                 else:
                     break
-                    print(f"Firm_{firm_id}: production is zero")
+                    # print(f"Firm_{firm_id}: production is zero")
             else:
                 break
-                print(f"Household_{household_id}: consumption is zero")
+                # print(f"Household_{household_id}: consumption is zero")
                 
 
     # cheaper places to buy
@@ -266,16 +273,31 @@ for step in range(num_steps):
     
     u_r = unem_c / num_households * 100
     unemployment_rate.append(u_r)
-    print(f'unemployment rate: {u_r} %')
+    print(f'unemployment rate: {u_r:.2f} %')
+
+
+    unbr_c = 0
+    for firm_id in range(num_firms):
+        if G.degree(f"Firm_{firm_id}") == 0:
+            unbr_c += 1
+    
+    b_r = unbr_c / num_firms * 100
+    Bankrupt_rate.append(b_r)
+    print(f'bankrupt rate: {b_r:.2f} %')
     print('==============================')
+
 
     
 if plot_state==True:
-    plt.plot(wage_households_1)
+    plt.plot(wage_households_test)
     plt.title('Wage')
     plt.show()
 
-    plt.plot(production_firm_1)
+    plt.plot(liquidity_households_test)
+    plt.title('household liquidity')
+    plt.show()
+
+    plt.plot(production_firm_test)
     plt.title('Production')
     plt.show()
 
