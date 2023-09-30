@@ -45,7 +45,7 @@ $$
 
 - At the beginning of a month, each firm has to decide on how to set its wage rate based on past success or failure to find workers at the offered wage rate.
 - The firm increases or decreases its wage rate based on whether it was able to fill all positions with workers in the last month.
-- Wage adjustment is performed by multiplying the current wage with a growth rate that is **idiosyncratic** [* an unusual habit or way of behaving that someone has] and drawn from a **uniform distribution**.
+- Wage adjustment is performed by multiplying the current wage with a growth rate that is **idiosyncratic** [an unusual habit or way of behaving that someone has] and drawn from a **uniform distribution**.
 - The decision whether to change the price or the number of employees is based on a comparison of the current level of inventories with the most recent demand.
 - If the inventory has fallen below a certain level, a new open position is created to raise production. If inventories are above a certain level, a worker is fired.
 - Hiring decisions lead to an immediate offering of a new position, while firing decisions are implemented with a lag of one month.
