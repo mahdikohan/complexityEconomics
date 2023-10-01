@@ -5,7 +5,7 @@ import math
 
 plot_state = True
 graph_state = False
-report_state = True
+report_state = False
 
 # Create an empty graph
 G = nx.Graph()
@@ -112,6 +112,7 @@ for step in range(num_steps):
                 G.remove_edges_from(list(G.edges(f"Firm_{firm_id}")))
             elif G.degree(f"Household_{household_id}") > 0 and \
                   (G.nodes[f"Firm_{firm_id}"]['wage']) > (G.nodes[f"Household_{household_id}"]['wage']):
+                # print(f'new connection household_{household_id}, firm_{firm_id}')
                 G.remove_edges_from(list(G.edges(f"Household_{household_id}")))
                 G.add_edge(f"Household_{household_id}",f"Firm_{firm_id}")
                 G.nodes[f"Household_{household_id}"]['wage'] = G.nodes[f"Firm_{firm_id}"]['wage']
@@ -147,29 +148,22 @@ for step in range(num_steps):
             firm_price_adj_part = G.nodes[f"Firm_{firm_id}"]['price']
             firm_low_production_adj_part = G.nodes[f"Firm_{firm_id}"]['production_boundary'][0]
             firm_high_production_adj_part = G.nodes[f"Firm_{firm_id}"]['production_boundary'][1]
-            firm_high_price_adj_part = G.nodes[f"Firm_{firm_id}"]['price_boundary'][0]
-            firm_low_price_adj_part = G.nodes[f"Firm_{firm_id}"]['price_boundary'][1]
+            firm_low_price_adj_part = G.nodes[f"Firm_{firm_id}"]['price_boundary'][0]
+            firm_high_price_adj_part = G.nodes[f"Firm_{firm_id}"]['price_boundary'][1]
             if firm_production_adj_part > firm_high_production_adj_part:
-                # how many employees should we fire ?
-                fire_number = min([math.ceil((firm_production_adj_part - firm_high_production_adj_part)/_lambda),len(list(G.neighbors(f"Firm_{firm_id}")))-1])
-                fire_adj_part = random.sample(list(G.neighbors(f"Firm_{firm_id}")),fire_number)
-                for fireing in fire_adj_part:
-                    G.remove_edge(f"Firm_{firm_id}", fireing)
+                fire_adj_part = random.choice(list(G.neighbors(f"Firm_{firm_id}")))
+                G.remove_edge(f"Firm_{firm_id}", fire_adj_part)
                 if firm_price_adj_part > firm_high_price_adj_part:
                     G.nodes[f"Firm_{firm_id}"]['price'] = firm_price_adj_part * (1 + random.uniform(0.1,0.4))
                 elif firm_price_adj_part < firm_low_price_adj_part:
                     G.nodes[f"Firm_{firm_id}"]['price'] = firm_price_adj_part * (1 - random.uniform(0.1,0.4))
             elif firm_production_adj_part < firm_low_production_adj_part:
                 # *temporary* is this we should add accurasy to it
-                # hire from unemployements
                 list_of_unmployed = [node for node in G.nodes() if G.degree(node) == 0 and G.nodes[node]['type'] == 'household']
                 if list_of_unmployed:
-                    hire_number = min([math.ceil((firm_low_production_adj_part - firm_production_adj_part) / _lambda),len(list_of_unmployed)])
-                    # we can add satisfy and unsatisfy in "recent_hiring" here
-                    for hireing in range(hire_number):
-                        hire_adj_part = random.choice(list_of_unmployed)
-                        G.add_edge(f"Firm_{firm_id}", hire_adj_part)
-                        G.nodes[hire_adj_part]['wage'] = G.nodes[f"Firm_{firm_id}"]['wage']
+                    hire_adj_part = random.choice(list_of_unmployed)
+                G.add_edge(f"Firm_{firm_id}", hire_adj_part)
+                G.nodes[hire_adj_part]['wage'] = G.nodes[f"Firm_{firm_id}"]['wage']
                 if firm_price_adj_part > firm_high_price_adj_part:
                     G.nodes[f"Firm_{firm_id}"]['price'] = firm_price_adj_part * (1 + random.uniform(0.1,0.4))
                 elif firm_price_adj_part < firm_low_price_adj_part:
@@ -180,37 +174,32 @@ for step in range(num_steps):
     # pay wage and adjust wage households
     for firm_id in range(num_firms):
         liquidity = G.nodes[f"Firm_{firm_id}"]["liquidity"]
-        labors = list(G.neighbors(f"Firm_{firm_id}"))
-        if len(labors) > 0:
-            adjust_wage = math.floor(G.nodes[f"Firm_{firm_id}"]["liquidity"] / len(labors) / init_invest)
-            if liquidity > 0 and liquidity > (G.nodes[f"Firm_{firm_id}"]["wage"] * len(labors)):
-                G.nodes[f"Firm_{firm_id}"]['wage'] = wage
-                for labor in labors:
-                    G.nodes[f"Firm_{firm_id}"]["liquidity"] -= wage
-                    G.nodes[labor]["liquidity"] += wage
+        # print(f"liquidity of Firm_{firm_id}: {liquidity}")
+        if liquidity > 0:
+            labors = G.neighbors(f"Firm_{firm_id}")
+            G.nodes[f"Firm_{firm_id}"]['wage'] = wage
+            for labor in labors:
+                G.nodes[f"Firm_{firm_id}"]["liquidity"] -= wage
+                G.nodes[labor]["liquidity"] += wage
 
-                # ===================collecting plot data=============================
-                    if labor=="Household_6":
-                        wage_households_test.append(G.nodes[labor]["wage"])
-                        liquidity_households_test.append(G.nodes[labor]["liquidity"])
+            # ===================collecting plot data=============================
+                if labor=="Household_6":
+                    wage_households_test.append(G.nodes[labor]["wage"])
+                    liquidity_households_test.append(G.nodes[labor]["liquidity"])
 
-                if firm_id == 6:
-                    production_firm_test.append(G.nodes[f"Firm_{firm_id}"]["production"])
-                # ====================================================================
-            elif liquidity > 0:
-                G.nodes[f"Firm_{firm_id}"]["wage"] = adjust_wage
+            if firm_id == 6:
+                production_firm_test.append(G.nodes[f"Firm_{firm_id}"]["production"])
+            # ====================================================================
+
         else:
             if report_state == True:
                 print(f'Firm_{firm_id} Bankrupt')
-            print(G.nodes[f"Firm_{firm_id}"])
-            # input()
 
 
 
 
     # preparing for update recent demand
     for firm_id in connected_firm:
-        # print(G.nodes[f'Firm_{firm_id}'])
         G.nodes[f'Firm_{firm_id}']['recent_demand'] = 0
 
     # consumption
