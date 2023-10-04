@@ -246,6 +246,14 @@ for step in range(num_steps):
                             G.nodes[f"Firm_{firm_id}"]['price'] = firm_price_adj_part * (1 + random.uniform(0.1,0.4))
 
 
+        if graph_state == True:
+            c_num_unem = 0
+            for household_id in range(num_households):
+                if G.degree(f"Household_{household_id}") == 0:
+                    c_num_unem += 1
+            employment_rate.append(c_num_unem)
+
+
 
 
 
