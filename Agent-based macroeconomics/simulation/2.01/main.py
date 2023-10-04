@@ -14,7 +14,7 @@ minimum_wage = 800
 num_firms = 100
 num_connected_firms = 15
 num_households = 1000
-num_steps = 12             # Number of simulation steps
+num_steps = 36             # Number of simulation steps
 num_days = 21               # Number of days
 _lambda = 3                 # Fix of technology
 phi = 0.25                  # demand production relation production = phi * demand
@@ -92,7 +92,7 @@ for household_id in range(num_households):
     G.nodes[f"Household_{household_id}"]["labors"] = connected_firm
 
 
-if plot_state==True and graph_state==True:
+if plot_state == True and graph_state == True:
     pos = nx.spring_layout(G)
     node_colors = ['skyblue' if G.nodes[node]['type'] == "household" else 'red' for node in G.nodes()]
     nx.draw(G, pos, with_labels=True, node_color=node_colors, font_color='black', node_size=800)
@@ -195,7 +195,6 @@ for step in range(num_steps):
 
 
     for day in range(num_days):
-
         # Production which is related to number of labor in firms
         for firm_id in range(num_firms):
             # Adjust production
@@ -205,8 +204,7 @@ for step in range(num_steps):
             if G.degree(f"Firm_{firm_id}") > 0:
                 G.nodes[f"Firm_{firm_id}"]['production'] += recent_production + _lambda*(G.degree(f"Firm_{firm_id}"))
             else:
-                G.nodes[f"Firm_{firm_id}"]['production'] = 0
-            
+                G.nodes[f"Firm_{firm_id}"]['production'] = 0            
             if firm_id==1:
                 print(G.nodes[f'Firm_1'], "labors: ", G.degree(f"Firm_{firm_id}"))
 
@@ -226,7 +224,8 @@ for step in range(num_steps):
                 if firm_production_adj_part > firm_high_production_adj_part:
                     fire_adj_part = random.choice(list(G.neighbors(f"Firm_{firm_id}")))
                     # Fire with one month delay
-                    G.nodes[f"Firm_{firm_id}"]['free_position'] -= 1
+                    if G.nodes[f"Firm_{firm_id}"]['free_position'] > -1:
+                        G.nodes[f"Firm_{firm_id}"]['free_position'] -= 1
                     probability_Calvo = random.random()
                     if probability_Calvo > 1-theta:
                         if firm_price_adj_part > firm_high_price_adj_part:
@@ -235,7 +234,10 @@ for step in range(num_steps):
                             G.nodes[f"Firm_{firm_id}"]['price'] = firm_price_adj_part * (1 + random.uniform(0.1,0.4))
                 elif firm_production_adj_part < firm_low_production_adj_part:
                     # Hiring immediately
-                    G.nodes[f"Firm_{firm_id}"]['free_position'] += 1
+                    if G.nodes[f"Firm_{firm_id}"]['free_position'] < 1:
+                        G.nodes[f"Firm_{firm_id}"]['free_position'] += 1
+                    elif G.nodes[f"Firm_{firm_id}"]['free_position'] == 1:
+                        G.nodes[f'Firm_{firm_id}']['wage'] = G.nodes[f'Firm_{firm_id}']['wage'] * (1 + 0.1)
                     G = hiring_by_firm(G, firm_id)
                     if probability_Calvo > 1-theta:
                         if firm_price_adj_part > firm_high_price_adj_part:
@@ -324,6 +326,7 @@ for step in range(num_steps):
 
     # pay wage and adjust wage households
     for firm_id in range(num_firms):
+        cons_liq = liquidity
         liquidity = G.nodes[f"Firm_{firm_id}"]["liquidity"]
         # print(f"liquidity of Firm_{firm_id}: {liquidity}")
         if liquidity > 0:
@@ -332,9 +335,20 @@ for step in range(num_steps):
             for labor in labors:
                 G.nodes[f"Firm_{firm_id}"]["liquidity"] -= wage
                 G.nodes[labor]["liquidity"] += wage
+                if G.nodes[f"Firm_{firm_id}"]["liquidity"] < 0.6 * cons_liq:
+                    break
         else:
             if report_state == True:
                 print(f'Firm_{firm_id} Bankrupt')
+
+
+
+    # fire labors with delay of one month
+    for firm_id in range(num_firms):
+        while G.nodes[f"Firm_{firm_id}"]['free_position'] < 0:
+            fire_adj_part = random.choice(list(G.neighbors(f"Firm_{firm_id}")))
+            G.remove_edge(f"Firm_{firm_id}", fire_adj_part)
+            G.nodes[f"Firm_{firm_id}"]['free_position'] += 1
 
             
 
