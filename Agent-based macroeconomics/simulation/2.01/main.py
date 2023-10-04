@@ -3,7 +3,7 @@ import random
 import matplotlib.pyplot as plt
 import math
 
-plot_state = True
+plot_state = False
 graph_state = True
 report_state = False
 
@@ -11,10 +11,11 @@ report_state = False
 G = nx.Graph()
 # Define the number of firms and households
 minimum_wage = 800
+maximum_wage = 8000
 num_firms = 100
 num_connected_firms = 15
 num_households = 1000
-num_steps = 36             # Number of simulation steps
+num_steps = 100             # Number of simulation steps
 num_days = 21               # Number of days
 _lambda = 3                 # Fix of technology
 phi = 0.25                  # demand production relation production = phi * demand
@@ -204,9 +205,13 @@ for step in range(num_steps):
             if G.degree(f"Firm_{firm_id}") > 0:
                 G.nodes[f"Firm_{firm_id}"]['production'] += recent_production + _lambda*(G.degree(f"Firm_{firm_id}"))
             else:
-                G.nodes[f"Firm_{firm_id}"]['production'] = 0            
-            if firm_id==1:
-                print(G.nodes[f'Firm_1'], "labors: ", G.degree(f"Firm_{firm_id}"))
+                G.nodes[f"Firm_{firm_id}"]['production'] = 0
+            
+
+            # if report_state == True:
+            if firm_id == 1:
+                with open('log.txt','+a') as f:
+                   f.write(f"{G.nodes[f'Firm_1']}, labors:{G.degree(f'Firm_{firm_id}')} \n")
 
 
 
@@ -237,7 +242,8 @@ for step in range(num_steps):
                     if G.nodes[f"Firm_{firm_id}"]['free_position'] < 1:
                         G.nodes[f"Firm_{firm_id}"]['free_position'] += 1
                     elif G.nodes[f"Firm_{firm_id}"]['free_position'] == 1:
-                        G.nodes[f'Firm_{firm_id}']['wage'] = G.nodes[f'Firm_{firm_id}']['wage'] * (1 + 0.1)
+                        if G.nodes[f'Firm_{firm_id}']['wage']>minimum_wage and G.nodes[f'Firm_{firm_id}']['wage']<maximum_wage:
+                            G.nodes[f'Firm_{firm_id}']['wage'] = G.nodes[f'Firm_{firm_id}']['wage'] * (1.01)
                     G = hiring_by_firm(G, firm_id)
                     if probability_Calvo > 1-theta:
                         if firm_price_adj_part > firm_high_price_adj_part:
@@ -245,13 +251,13 @@ for step in range(num_steps):
                         elif firm_price_adj_part < firm_low_price_adj_part:
                             G.nodes[f"Firm_{firm_id}"]['price'] = firm_price_adj_part * (1 + random.uniform(0.1,0.4))
 
-
+        # Report about daily unemployement
         if graph_state == True:
             c_num_unem = 0
             for household_id in range(num_households):
                 if G.degree(f"Household_{household_id}") == 0:
                     c_num_unem += 1
-            employment_rate.append(c_num_unem)
+            unemployment_rate.append(c_num_unem)
 
 
 
@@ -332,22 +338,44 @@ for step in range(num_steps):
 
 
 
-    # pay wage and adjust wage households
+    # pay wage
     for firm_id in range(num_firms):
         cons_liq = liquidity
         liquidity = G.nodes[f"Firm_{firm_id}"]["liquidity"]
+        labors = list(G.neighbors(f"Firm_{firm_id}"))
+        wage = G.nodes[f"Firm_{firm_id}"]['wage']
         # print(f"liquidity of Firm_{firm_id}: {liquidity}")
-        if liquidity > 0:
-            labors = G.neighbors(f"Firm_{firm_id}")
-            G.nodes[f"Firm_{firm_id}"]['wage'] = wage
+        if liquidity > 0 and liquidity > 0.6 * (len(labors) * wage):
             for labor in labors:
+                if G.nodes[f"Firm_{firm_id}"]["liquidity"] < 0.6 * (len(labors) * wage):
+                    break
                 G.nodes[f"Firm_{firm_id}"]["liquidity"] -= wage
                 G.nodes[labor]["liquidity"] += wage
-                if G.nodes[f"Firm_{firm_id}"]["liquidity"] < 0.6 * cons_liq:
-                    break
         else:
             if report_state == True:
                 print(f'Firm_{firm_id} Bankrupt')
+
+
+
+
+
+     # Adjust wage households
+    for firm_id in range(num_firms):
+        wage = G.nodes[f"Firm_{firm_id}"]['wage']
+        if wage>minimum_wage and wage<maximum_wage:
+            if G.nodes[f"Firm_{firm_id}"]['free_position'] > 0:
+                # this means firm is unsuccessful in hiring
+                G.nodes[f"Firm_{firm_id}"]['wage'] = wage * (1.01)
+            elif G.nodes[f"Firm_{firm_id}"]['free_position'] <= 0:
+                # this means firm is unsuccessful in hiring
+                G.nodes[f"Firm_{firm_id}"]['wage'] = wage * (0.99)
+
+
+
+
+
+
+
 
 
 
@@ -370,10 +398,15 @@ for step in range(num_steps):
         total_production += G.nodes[f"Firm_{firm_id}"]["production"]
     total_production_firm_test.append(total_production)
     production_firm_test.append(G.nodes["Firm_5"]["production"])
-    input()
+    # input()
+
+
 plt.plot(production_firm_test)
 plt.show()
 
+
+plt.plot(unemployment_rate)
+plt.show()
 
 
 pos = nx.spring_layout(G)
