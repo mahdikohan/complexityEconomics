@@ -211,7 +211,7 @@ for step in range(num_steps):
             # if report_state == True:
             if firm_id == 1:
                 with open('log.txt','+a') as f:
-                   f.write(f"{G.nodes[f'Firm_1']}, labors:{G.degree(f'Firm_{firm_id}')} \n")
+                   f.write(f"{G.nodes[f'Firm_1']}, labors:{G.degree(f'Firm_{firm_id}')}, step:{step} \n")
 
 
 
@@ -280,7 +280,7 @@ for step in range(num_steps):
             for firm_id in sample_firms:
                 G.nodes[f'Firm_{firm_id}']['recent_demand'] = demand
                 consumption = demand * G.nodes[f'Firm_{firm_id}']['price']
-                if consumption > 0 and (G.nodes[f'Household_{household_id}']['liquidity'] - consumption) > 0:
+                if consumption > 0:
                     firm_production = G.nodes[f'Firm_{firm_id}']['production']
                     if firm_production > 0:
                         if G.nodes[f'Firm_{firm_id}']['production'] >= demand:
