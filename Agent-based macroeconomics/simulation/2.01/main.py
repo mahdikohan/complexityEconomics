@@ -10,12 +10,12 @@ report_state = False
 # Create an empty graph
 G = nx.Graph()
 # Define the number of firms and households
-minimum_wage = 800
-maximum_wage = 8000
+minimum_wage = 0
+maximum_wage = 10000
 num_firms = 100
-num_connected_firms = 15
+num_connected_firms = 7
 num_households = 1000
-num_steps = 100             # Number of simulation steps
+num_steps = 12             # Number of simulation steps
 num_days = 21               # Number of days
 _lambda = 3                 # Fix of technology
 # phi = 0.25                  # demand production relation production = phi * demand
@@ -35,12 +35,12 @@ delta = 0.019
 
 # Initialize households with attributes and add them to the graph
 for household_id in range(num_households):
-    wage = random.uniform(2000, 6000)
+    h_wage = random.uniform(100, 200)
     liquidity = random.uniform(3000, 5000)
     demand = random.uniform(20, 100)
     household_attrs = {
         "type": "household",
-        "wage": wage,
+        "wage": h_wage,
         "liquidity": liquidity,
         "demand": demand,
         "recent_demand_status": None, # complete or uncomplete
@@ -50,7 +50,7 @@ for household_id in range(num_households):
 
 # Initialize firms with attributes and add them to the graph
 for firm_id in range(num_firms):
-    wage = random.uniform(3000, 7000)
+    f_wage = random.uniform(3000, 7000)
     recent_wage = random.uniform(3000, 7000)
     liquidity = random.uniform(100000, 500000)
     production = random.uniform(100, 500)
@@ -63,7 +63,7 @@ for firm_id in range(num_firms):
 
     firm_attrs = {
         "type": "firm",
-        "wage": wage,
+        "wage": f_wage,
         "liquidity": liquidity,
         "production": production,
         "recent_production": production,
@@ -91,6 +91,7 @@ for firm_id in range(num_firms):
     if j+i < num_households:
         for recruit in range(j, j+i):
             G.add_edge(f"Firm_{firm_id}", f"Household_{recruit}")
+            G.nodes[f"Household_{recruit}"]["wage"] = G.nodes[f"Firm_{firm_id}"]["wage"]
     j = j+i
     G.nodes[f"Firm_{firm_id}"]["recent_labors"] = G.degree(f"Firm_{firm_id}")
 
@@ -121,11 +122,17 @@ def hiring_by_firm(g, firm_id):
             if g.degree(h) == 0:
                 if f_wage >= h["wage"]:
                     g.add_edge(f"Firm_{firm_id}", f"Household_{household_id}")
+                    print(f"Firm_{firm_id}", f"Household_{household_id}")
                     hire_number -= 1
                     g.nodes[f"Household_{household_id}"]['wage'] = f_wage
-
     return g
 
+def update_h_wages(g,firm_id):
+    labors = list(g.neighbors(f"Firm_{firm_id}"))
+    update_wage = g.nodes[f"Firm_{firm_id}"]["wage"]
+    for l in labors:
+        g.nodes[l]["wage"] = update_wage
+    return g
 
 wage_households_test = []
 production_firm_test = []
@@ -162,7 +169,6 @@ for step in range(num_steps):
         dc_price_adj = (G.degree(f"Firm_{firm_id}")*wage_price_adj) - (G.nodes[f"Firm_{firm_id}"]["recent_labors"]*recent_wage_price_adj)
         dq_price_adj = G.nodes[f"Firm_{firm_id}"]["production"] - G.nodes[f"Firm_{firm_id}"]["recent_production"]
         if dq_price_adj != 0 and dc_price_adj != 0:
-            print(f"information dc:{dc_price_adj}, dq{dq_price_adj}")
             price_up_adj = thi_up * (dc_price_adj/dq_price_adj)
             price_down_adj = thi_down * (dc_price_adj/dq_price_adj)
             G.nodes[f"Firm_{firm_id}"]["price_boundary"] = [price_down_adj,price_up_adj]
@@ -172,31 +178,34 @@ for step in range(num_steps):
 
 
     # Search new position with households
+    for firm_id in range(num_firms):
+        G = hiring_by_firm(G,firm_id)
     for household_id in range(num_households):
-        # Search a job position
-        labors_part_job_position = G.nodes[f"Household_{household_id}"]["labors"]
-        for firm_id in random.sample(labors_part_job_position, len(labors_part_job_position)):
-            if G.nodes[f"Firm_{firm_id}"]['liquidity'] < 0:
-                G.remove_edges_from(list(G.edges(f"Firm_{firm_id}")))
-            elif G.degree(f"Household_{household_id}") > 0 and \
-                 G.nodes[f"Firm_{firm_id}"]["free_position"] > 0 and \
-                 (G.nodes[f"Firm_{firm_id}"]['wage']) > (G.nodes[f"Household_{household_id}"]['wage']):
-                firm_of_labor_link = list(G.edges(f"Household_{household_id}"))
-                G.remove_edges_from(firm_of_labor_link)
-                G.nodes[firm_of_labor_link[0][1]]["free_position"] += 1
-                G.add_edge(f"Household_{household_id}",f"Firm_{firm_id}")
-                G.nodes[f"Firm_{firm_id}"]['free_position'] -= 1
-                G.nodes[f"Household_{household_id}"]['wage'] = G.nodes[f"Firm_{firm_id}"]['wage']
-            elif G.nodes[f"Firm_{firm_id}"]["free_position"] > 0 and \
-                 (G.nodes[f"Firm_{firm_id}"]['wage']) > (G.nodes[f"Household_{household_id}"]['wage']):
-                G.add_edge(f"Household_{household_id}",f"Firm_{firm_id}")
-                G.nodes[f"Firm_{firm_id}"]['free_position'] -= 1
-                G.nodes[f"Household_{household_id}"]['wage'] = G.nodes[f"Firm_{firm_id}"]['wage']
         if G.degree(f"Household_{household_id}") == 0:
             if G.nodes[f"Household_{household_id}"]['wage'] > minimum_wage:
-                G.nodes[f"Household_{household_id}"]['wage'] = 0.9 * G.nodes[f"Household_{household_id}"]['wage']
+                G.nodes[f"Household_{household_id}"]['wage'] = G.nodes[f"Household_{household_id}"]['wage'] * (1+random.uniform(0,0.25))
+        else:
+            # Search a job position
+            labors_part_job_position = G.nodes[f"Household_{household_id}"]["labors"]
+            for firm_id in random.sample(labors_part_job_position, len(labors_part_job_position)):
+                if G.nodes[f"Firm_{firm_id}"]['liquidity'] < 0:
+                    G.remove_edges_from(list(G.edges(f"Firm_{firm_id}")))
+                elif G.degree(f"Household_{household_id}") > 0 and \
+                    G.nodes[f"Firm_{firm_id}"]["free_position"] > 0 and \
+                    (G.nodes[f"Firm_{firm_id}"]['wage']) > (G.nodes[f"Household_{household_id}"]['wage']):
+                    firm_of_labor_link = list(G.edges(f"Household_{household_id}"))
+                    G.remove_edges_from(firm_of_labor_link)
+                    G.nodes[firm_of_labor_link[0][1]]["free_position"] += 1
+                    G.add_edge(f"Household_{household_id}",f"Firm_{firm_id}")
+                    G.nodes[f"Firm_{firm_id}"]['free_position'] -= 1
+                    G.nodes[f"Household_{household_id}"]['wage'] = G.nodes[f"Firm_{firm_id}"]['wage']
+                elif G.nodes[f"Firm_{firm_id}"]["free_position"] > 0 and \
+                    (G.nodes[f"Firm_{firm_id}"]['wage']) > (G.nodes[f"Household_{household_id}"]['wage']):
+                    G.add_edge(f"Household_{household_id}",f"Firm_{firm_id}")
+                    G.nodes[f"Firm_{firm_id}"]['free_position'] -= 1
+                    G.nodes[f"Household_{household_id}"]['wage'] = G.nodes[f"Firm_{firm_id}"]['wage']
 
-    
+        
 
 
 
@@ -278,11 +287,12 @@ for step in range(num_steps):
                             G.nodes[f"Firm_{firm_id}"]['price'] = firm_price_adj_part * (1 + random.uniform(0,nu))
                 elif firm_production_adj_part < firm_low_production_adj_part:
                     # Hiring immediately
-                    if G.nodes[f"Firm_{firm_id}"]['free_position'] < 1:
-                        G.nodes[f"Firm_{firm_id}"]['free_position'] += 1
-                    elif G.nodes[f"Firm_{firm_id}"]['free_position'] == 1:
-                        if G.nodes[f'Firm_{firm_id}']['wage']>minimum_wage and G.nodes[f'Firm_{firm_id}']['wage']<maximum_wage:
-                            G.nodes[f'Firm_{firm_id}']['wage'] = G.nodes[f'Firm_{firm_id}']['wage'] * (1 + random.uniform(0,delta))
+                    # if G.nodes[f"Firm_{firm_id}"]['free_position'] < 1:
+                    G.nodes[f"Firm_{firm_id}"]['free_position'] += 1
+                    # elif G.nodes[f"Firm_{firm_id}"]['free_position'] == 1:
+                    if G.nodes[f'Firm_{firm_id}']['wage']>minimum_wage and G.nodes[f'Firm_{firm_id}']['wage']<maximum_wage:
+                        G.nodes[f'Firm_{firm_id}']['wage'] = G.nodes[f'Firm_{firm_id}']['wage'] * (1 + random.uniform(0,delta))
+                        G = update_h_wages(G,firm_id)
                     G = hiring_by_firm(G, firm_id)
                     if probability_Calvo > 1-theta:
                         if firm_price_adj_part > firm_high_price_adj_part:
@@ -387,7 +397,7 @@ for step in range(num_steps):
         # print(f"liquidity of Firm_{firm_id}: {liquidity}")
         if liquidity > 0:
             for labor in labors:
-                if G.nodes[f"Firm_{firm_id}"]["liquidity"] < 0.1 * (len(labors) * wage):
+                if G.nodes[f"Firm_{firm_id}"]["liquidity"] < (len(labors) * wage):
                     break
                 G.nodes[f"Firm_{firm_id}"]["liquidity"] -= wage
                 G.nodes[labor]["liquidity"] += wage
@@ -407,9 +417,11 @@ for step in range(num_steps):
             if G.nodes[f"Firm_{firm_id}"]['free_position'] > 0:
                 # this means firm is unsuccessful in hiring
                 G.nodes[f"Firm_{firm_id}"]['wage'] = wage * (1 + random.uniform(0,delta))
-            elif G.nodes[f"Firm_{firm_id}"]['free_position'] <= 0:
-                # this means firm is unsuccessful in hiring
-                G.nodes[f"Firm_{firm_id}"]['wage'] = wage * (1 + random.uniform(0,delta))
+                G = update_h_wages(G,firm_id)
+            elif G.nodes[f"Firm_{firm_id}"]['free_position'] == 0:
+                # this means firm is successful in hiring
+                G.nodes[f"Firm_{firm_id}"]['wage'] = wage * (1 - random.uniform(0,delta))
+                G = update_h_wages(G,firm_id)
 
 
 
