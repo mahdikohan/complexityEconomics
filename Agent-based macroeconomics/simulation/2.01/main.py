@@ -70,6 +70,7 @@ for firm_id in range(num_firms):
         "price_boundary": price_boundary,
         "production_boundary": production_boundary,
         "price": price,
+        "reserve": 0,
         "recent_labors": 0,
         "recent_wage": recent_wage,
         "recent_demand": recent_demand,
@@ -136,7 +137,9 @@ def update_h_wages(g,firm_id):
 
 wage_households_test = []
 production_firm_test = []
+reservation_firm_test = []
 total_production_firm_test = []
+total_reservation_firm_test = []
 liquidity_households_test = []
 unemployment_rate = []
 employment_rate = []
@@ -253,8 +256,8 @@ for step in range(num_steps):
             # G.nodes[f"Firm_{firm_id}"]["recent_production"] = phi * G.nodes[f"Firm_{firm_id}"]["recent_demand"]
             # # New production
             G.nodes[f"Firm_{firm_id}"]["recent_production"] = G.nodes[f"Firm_{firm_id}"]["production"]
-            G.nodes[f"Firm_{firm_id}"]['production'] += _lambda*(G.degree(f"Firm_{firm_id}"))
-            
+            G.nodes[f"Firm_{firm_id}"]['production'] = _lambda*(G.degree(f"Firm_{firm_id}"))
+            G.nodes[f"Firm_{firm_id}"]['reserve'] += G.nodes[f"Firm_{firm_id}"]['production']
 
             # if report_state == True:
             
@@ -283,6 +286,10 @@ for step in range(num_steps):
 
             # Adjust production
             if G.degree(f"Firm_{firm_id}") > 1:
+                # reset state
+                G.nodes[f"Firm_{firm_id}"]['free_position'] = 0
+
+
                 firm_production_adj_part = G.nodes[f"Firm_{firm_id}"]['production']
                 firm_price_adj_part = G.nodes[f"Firm_{firm_id}"]['price']
                 firm_low_production_adj_part = G.nodes[f"Firm_{firm_id}"]['production_boundary'][0]
@@ -293,7 +300,7 @@ for step in range(num_steps):
                 if firm_production_adj_part > firm_high_production_adj_part:
                     fire_adj_part = random.choice(list(G.neighbors(f"Firm_{firm_id}")))
                     # Fire with one month delay
-                    if G.nodes[f"Firm_{firm_id}"]['free_position'] > -1:
+                    if G.nodes[f"Firm_{firm_id}"]['free_position'] == 0:
                         G.nodes[f"Firm_{firm_id}"]['free_position'] -= 1
                     if probability_Calvo > 1-theta:
                         if firm_price_adj_part > firm_high_price_adj_part:
@@ -302,8 +309,8 @@ for step in range(num_steps):
                             G.nodes[f"Firm_{firm_id}"]['price'] = firm_price_adj_part * (1 + random.uniform(0,nu))
                 elif firm_production_adj_part < firm_low_production_adj_part:
                     # Hiring immediately
-                    # if G.nodes[f"Firm_{firm_id}"]['free_position'] < 1:
-                    G.nodes[f"Firm_{firm_id}"]['free_position'] += 1
+                    if G.nodes[f"Firm_{firm_id}"]['free_position'] == 0:
+                        G.nodes[f"Firm_{firm_id}"]['free_position'] += 1
                     # elif G.nodes[f"Firm_{firm_id}"]['free_position'] == 1:
                     if G.nodes[f'Firm_{firm_id}']['wage']>minimum_wage and G.nodes[f'Firm_{firm_id}']['wage']<maximum_wage:
                         G.nodes[f'Firm_{firm_id}']['wage'] = G.nodes[f'Firm_{firm_id}']['wage'] * (1 + random.uniform(0,delta))
@@ -346,37 +353,37 @@ for step in range(num_steps):
             for firm_id in sample_firms:
                 consumption = demand * G.nodes[f'Firm_{firm_id}']['price']
                 if consumption > 0:
-                    firm_production = G.nodes[f'Firm_{firm_id}']['production']
+                    firm_production = G.nodes[f'Firm_{firm_id}']['reserve']
                     if firm_production > 0:
-                        if G.nodes[f'Firm_{firm_id}']['production'] >= demand:
+                        if G.nodes[f'Firm_{firm_id}']['reserve'] >= demand:
                             if G.nodes[f'Household_{household_id}']['liquidity'] > consumption:
                                 G.nodes[f'Household_{household_id}']['liquidity'] -= consumption
-                                G.nodes[f'Firm_{firm_id}']['production'] -= demand
+                                G.nodes[f'Firm_{firm_id}']['reserve'] -= demand
                                 G.nodes[f'Firm_{firm_id}']['liquidity'] += consumption
                                 demand = 0
                             elif G.nodes[f'Household_{household_id}']['liquidity'] < consumption:
-                                G.nodes[f'Firm_{firm_id}']['production'] -= demand
+                                G.nodes[f'Firm_{firm_id}']['reserve'] -= demand
                                 G.nodes[f'Firm_{firm_id}']['liquidity'] += G.nodes[f'Household_{household_id}']['liquidity']
                                 G.nodes[f'Household_{household_id}']['liquidity'] = 0
                                 demand = 0
-                        elif G.nodes[f'Firm_{firm_id}']['production'] < demand:
+                        elif G.nodes[f'Firm_{firm_id}']['reserve'] < demand:
                             if G.nodes[f'Household_{household_id}']['liquidity'] > consumption:
-                                share_of_consumption = G.nodes[f'Firm_{firm_id}']['production'] * G.nodes[f'Firm_{firm_id}']['price']
+                                share_of_consumption = G.nodes[f'Firm_{firm_id}']['reserve'] * G.nodes[f'Firm_{firm_id}']['price']
                                 G.nodes[f'Household_{household_id}']['liquidity'] -= share_of_consumption
-                                G.nodes[f'Firm_{firm_id}']['production'] = 0
+                                G.nodes[f'Firm_{firm_id}']['reserve'] = 0
                                 G.nodes[f'Firm_{firm_id}']['liquidity'] += share_of_consumption
                                 demand -= (share_of_consumption / G.nodes[f'Firm_{firm_id}']['price'])
                             elif G.nodes[f'Household_{household_id}']['liquidity'] < consumption:
                                 share_of_demand = G.nodes[f'Household_{household_id}']['liquidity'] / G.nodes[f'Firm_{firm_id}']['price']
-                                if G.nodes[f'Firm_{firm_id}']['production'] > share_of_demand:
-                                    G.nodes[f'Firm_{firm_id}']['production'] -= share_of_demand
+                                if G.nodes[f'Firm_{firm_id}']['reserve'] > share_of_demand:
+                                    G.nodes[f'Firm_{firm_id}']['reserve'] -= share_of_demand
                                     G.nodes[f'Firm_{firm_id}']['liquidity'] += G.nodes[f'Household_{household_id}']['liquidity']
                                     G.nodes[f'Household_{household_id}']['liquidity'] = 0
                                     demand = 0
-                                elif G.nodes[f'Firm_{firm_id}']['production'] < share_of_demand:
-                                    share_of_consumption = G.nodes[f'Firm_{firm_id}']['production'] * G.nodes[f'Firm_{firm_id}']['price']
+                                elif G.nodes[f'Firm_{firm_id}']['reserve'] < share_of_demand:
+                                    share_of_consumption = G.nodes[f'Firm_{firm_id}']['reserve'] * G.nodes[f'Firm_{firm_id}']['price']
                                     G.nodes[f'Household_{household_id}']['liquidity'] -= share_of_consumption
-                                    G.nodes[f'Firm_{firm_id}']['production'] = 0
+                                    G.nodes[f'Firm_{firm_id}']['reserve'] = 0
                                     G.nodes[f'Firm_{firm_id}']['liquidity'] += share_of_consumption
                                     demand -= (share_of_consumption / G.nodes[f'Firm_{firm_id}']['price'])
                     else:
@@ -452,16 +459,25 @@ for step in range(num_steps):
 
     # Generate report for this month
     total_production = 0
+    total_reservation = 0
     for firm_id in range(num_firms):
         total_production += G.nodes[f"Firm_{firm_id}"]["production"]
+        total_reservation += G.nodes[f"Firm_{firm_id}"]["reserve"]
     total_production_firm_test.append(total_production)
+    
     production_firm_test.append(G.nodes["Firm_5"]["production"])
+    reservation_firm_test.append(G.nodes["Firm_5"]["reserve"])
     # input()
 
 
 if plot_state == True:
     plt.plot(production_firm_test)
     plt.title('production_firm_test')
+    plt.show()
+
+
+    plt.plot(reservation_firm_test)
+    plt.title('reservation_firm_test')
     plt.show()
 
 
