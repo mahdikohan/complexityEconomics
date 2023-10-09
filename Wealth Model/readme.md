@@ -1,4 +1,4 @@
-# Agent based Macroeconomics
+# Wealth Distribution
 We will provide a summary of a model presented by Lengnick, M. (2013), who is a researcher in this field. We will also provide a framework using the Python programming language. This modeling and structure allow us to examine the desired results by changing the parameters.
 
 <p align="center">
