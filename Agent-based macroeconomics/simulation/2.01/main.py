@@ -347,9 +347,13 @@ for step in range(num_steps):
             # We did it for uniform distribution of sellers
             sample_firms = random.sample(connected_firm, len(connected_firm))
             # Buy things
-            demand = min(((G.nodes[f'Household_{household_id}']['liquidity'] / avg_price) ** 0.9),\
-                         (G.nodes[f'Household_{household_id}']['liquidity'] / avg_price)) / num_days
-            G.nodes[f'Firm_{firm_id}']['recent_demand'] = demand
+            try:
+                G.nodes[f'Firm_{firm_id}']['recent_demand'] = demand
+                demand = min(((G.nodes[f'Household_{household_id}']['liquidity'] / avg_price) ** 0.9),\
+                            (G.nodes[f'Household_{household_id}']['liquidity'] / avg_price)) / num_days
+            except:
+                demand = min(((G.nodes[f'Household_{household_id}']['liquidity'] / avg_price) ** 0.9),\
+                            (G.nodes[f'Household_{household_id}']['liquidity'] / avg_price)) / num_days
             for firm_id in sample_firms:
                 consumption = demand * G.nodes[f'Firm_{firm_id}']['price']
                 if consumption > 0:
