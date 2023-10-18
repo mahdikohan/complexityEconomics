@@ -179,7 +179,10 @@ for step in range(num_steps):
     for firm_id in range(num_firms):
         # update recent demand by previous month
         G.nodes[f"Firm_{firm_id}"]["recent_demand"] = G.nodes[f'Firm_{firm_id}']['demand']
-        G.nodes[f"Firm_{firm_id}"]["demand"] = 0
+        # G.nodes[f"Firm_{firm_id}"]["demand"] = 0
+        # update production
+        G.nodes[f"Firm_{firm_id}"]["recent_production"] = G.nodes[f"Firm_{firm_id}"]["production"]
+        # G.nodes[f"Firm_{firm_id}"]["production"] = 0
         # Adjust Adjust inventory(production)
         production_boundary_adj_up = phi_up * G.nodes[f"Firm_{firm_id}"]["recent_demand"]
         production_boundary_adj_down = phi_down * G.nodes[f"Firm_{firm_id}"]["recent_demand"]
@@ -187,7 +190,7 @@ for step in range(num_steps):
         # Adjust price
         recent_wage_price_adj = G.nodes[f"Firm_{firm_id}"]["recent_wage"]
         wage_price_adj = G.nodes[f"Firm_{firm_id}"]["wage"]
-        dc_price_adj = (G.degree(f"Firm_{firm_id}")*wage_price_adj) - (G.nodes[f"Firm_{firm_id}"]["recent_labors"]*recent_wage_price_adj)
+        dc_price_adj = (G.degree(f"Firm_{firm_id}") * wage_price_adj) - (G.nodes[f"Firm_{firm_id}"]["recent_labors"]*recent_wage_price_adj)
         dq_price_adj = G.nodes[f"Firm_{firm_id}"]["production"] - G.nodes[f"Firm_{firm_id}"]["recent_production"]
         if dq_price_adj != 0 and dc_price_adj != 0:
             price_up_adj = thi_up * (dc_price_adj/dq_price_adj)
@@ -259,11 +262,8 @@ for step in range(num_steps):
             # # Adjust production
             # G.nodes[f"Firm_{firm_id}"]["recent_production"] = phi * G.nodes[f"Firm_{firm_id}"]["recent_demand"]
             # # New production
-            G.nodes[f"Firm_{firm_id}"]["recent_production"] = G.nodes[f"Firm_{firm_id}"]["production"]
-            G.nodes[f"Firm_{firm_id}"]['production'] = _lambda*(G.degree(f"Firm_{firm_id}"))
-            G.nodes[f"Firm_{firm_id}"]['reserve'] += G.nodes[f"Firm_{firm_id}"]['production']
-
-            # if report_state == True:
+            G.nodes[f"Firm_{firm_id}"]['production'] += _lambda*(G.degree(f"Firm_{firm_id}"))
+            G.nodes[f"Firm_{firm_id}"]['reserve'] += _lambda*(G.degree(f"Firm_{firm_id}"))
             
             if firm_id == 1:  
                 attributes_to_print = list(G.nodes[f'Firm_{firm_id}'].keys())
