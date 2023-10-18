@@ -70,6 +70,7 @@ for firm_id in range(num_firms):
         "price_boundary": price_boundary,
         "production_boundary": production_boundary,
         "price": price,
+        "demand":0,
         "reserve": 0,
         "recent_labors": 0,
         "recent_wage": recent_wage,
@@ -176,6 +177,9 @@ for step in range(num_steps):
 
     # Adjust price and Adjust inventory(production)
     for firm_id in range(num_firms):
+        # update recent demand by previous month
+        G.nodes[f"Firm_{firm_id}"]["recent_demand"] = G.nodes[f'Firm_{firm_id}']['demand']
+        G.nodes[f"Firm_{firm_id}"]["demand"] = 0
         # Adjust Adjust inventory(production)
         production_boundary_adj_up = phi_up * G.nodes[f"Firm_{firm_id}"]["recent_demand"]
         production_boundary_adj_down = phi_down * G.nodes[f"Firm_{firm_id}"]["recent_demand"]
@@ -273,7 +277,7 @@ for step in range(num_steps):
                 # print(values)
 
                 # print(list(G.nodes[f'Firm_1'].keys()))
-                with open('log.txt','+a') as f:
+                with open('log.csv','+a') as f:
                     if header == 0:
                         f.write(column_names+",labors,step"+"\n")
                         header +=1
@@ -347,14 +351,18 @@ for step in range(num_steps):
             # We did it for uniform distribution of sellers
             sample_firms = random.sample(connected_firm, len(connected_firm))
             # Buy things
-            try:
-                G.nodes[f'Firm_{firm_id}']['recent_demand'] = demand
-                demand = min(((G.nodes[f'Household_{household_id}']['liquidity'] / avg_price) ** 0.9),\
-                            (G.nodes[f'Household_{household_id}']['liquidity'] / avg_price)) / num_days
-            except:
-                demand = min(((G.nodes[f'Household_{household_id}']['liquidity'] / avg_price) ** 0.9),\
-                            (G.nodes[f'Household_{household_id}']['liquidity'] / avg_price)) / num_days
+            
+            demand = min(((G.nodes[f'Household_{household_id}']['liquidity'] / avg_price) ** 0.9),\
+                        (G.nodes[f'Household_{household_id}']['liquidity'] / avg_price)) / num_days
             for firm_id in sample_firms:
+
+
+
+                # recent demand
+                G.nodes[f'Firm_{firm_id}']['demand'] += demand
+
+
+
                 consumption = demand * G.nodes[f'Firm_{firm_id}']['price']
                 if consumption > 0:
                     firm_production = G.nodes[f'Firm_{firm_id}']['reserve']
