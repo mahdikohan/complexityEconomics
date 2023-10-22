@@ -126,7 +126,7 @@ def hiring_by_firm(g, firm_id):
                     g.add_edge(f"Firm_{firm_id}", f"Household_{household_id}")
                     print(f"Firm_{firm_id}", f"Household_{household_id}")
                     hire_number -= 1
-                    g.nodes[f"Household_{household_id}"]['wage'] = f_wage
+                    g.nodes[f"Household_{household_id}"]["wage"] = f_wage
     return g
 
 def update_h_wages(g,firm_id):
@@ -162,35 +162,37 @@ for step in range(num_steps):
 
     # Adjust wage households
     for firm_id in range(num_firms):
-        wage = G.nodes[f"Firm_{firm_id}"]['wage']
-        G.nodes[f"Firm_{firm_id}"]['recent_wage'] = wage
-        if wage>minimum_wage and wage<maximum_wage:
-            if G.nodes[f"Firm_{firm_id}"]['free_position'] > 0:
+        if wage > minimum_wage and wage < maximum_wage:
+            wage = G.nodes[f"Firm_{firm_id}"]["wage"]
+            G.nodes[f"Firm_{firm_id}"]["recent_wage"] = wage
+            if G.nodes[f"Firm_{firm_id}"]["free_position"] > 0:
                 # this means firm is unsuccessful in hiring
-                G.nodes[f"Firm_{firm_id}"]['wage'] = wage * (1 + random.uniform(0,delta))
+                G.nodes[f"Firm_{firm_id}"]["wage"] = wage * (1 + random.uniform(0,delta))
                 G = update_h_wages(G,firm_id)
-            # elif G.nodes[f"Firm_{firm_id}"]['free_position'] == 0:
-            #     # this means firm is successful in hiring
-            #     G.nodes[f"Firm_{firm_id}"]['wage'] = wage * (1 - random.uniform(0,delta))
-            #     G = update_h_wages(G,firm_id)
+            else:
+                # this means firm is successful in hiring
+                G.nodes[f"Firm_{firm_id}"]["wage"] = wage * (1 - random.uniform(0,delta))
+                G = update_h_wages(G,firm_id)
     
 
-    # Adjust price and Adjust inventory(production)
+    # Price and inventory boundary
     for firm_id in range(num_firms):
         # update recent demand by previous month
-        G.nodes[f"Firm_{firm_id}"]["recent_demand"] = G.nodes[f'Firm_{firm_id}']['demand']
-        # G.nodes[f"Firm_{firm_id}"]["demand"] = 0
-        # update production
+        G.nodes[f"Firm_{firm_id}"]["recent_demand"] = G.nodes[f"Firm_{firm_id}"]['demand']
+        G.nodes[f"Firm_{firm_id}"]["demand"] = 0
+        # update recent production
         G.nodes[f"Firm_{firm_id}"]["recent_production"] = G.nodes[f"Firm_{firm_id}"]["production"]
-        # G.nodes[f"Firm_{firm_id}"]["production"] = 0
-        # Adjust Adjust inventory(production)
+        G.nodes[f"Firm_{firm_id}"]["production"] = 0
+        # Adjust inventory(production) boundary
         production_boundary_adj_up = phi_up * G.nodes[f"Firm_{firm_id}"]["recent_demand"]
         production_boundary_adj_down = phi_down * G.nodes[f"Firm_{firm_id}"]["recent_demand"]
         G.nodes[f"Firm_{firm_id}"]["production_boundary"] = [production_boundary_adj_down,production_boundary_adj_up]
-        # Adjust price
+        # Adjust price boundary
+        # # price is related to marginal cost
         recent_wage_price_adj = G.nodes[f"Firm_{firm_id}"]["recent_wage"]
         wage_price_adj = G.nodes[f"Firm_{firm_id}"]["wage"]
-        dc_price_adj = (G.degree(f"Firm_{firm_id}") * wage_price_adj) - (G.nodes[f"Firm_{firm_id}"]["recent_labors"]*recent_wage_price_adj)
+        # # calculation of marginal cost by difference of labor costs respect to last month
+        dc_price_adj = (G.degree(f"Firm_{firm_id}") * wage_price_adj) - (G.nodes[f"Firm_{firm_id}"]["recent_labors"] * recent_wage_price_adj)
         dq_price_adj = G.nodes[f"Firm_{firm_id}"]["production"] - G.nodes[f"Firm_{firm_id}"]["recent_production"]
         if dq_price_adj != 0 and dc_price_adj != 0:
             price_up_adj = thi_up * (dc_price_adj/dq_price_adj)
@@ -206,29 +208,29 @@ for step in range(num_steps):
         G = hiring_by_firm(G,firm_id)
     for household_id in range(num_households):
         if G.degree(f"Household_{household_id}") == 0 and (G.nodes[f"Firm_{firm_id}"]["free_position"] > 0) and \
-              (G.nodes[f"Firm_{firm_id}"]['wage'] > G.nodes[f"Household_{household_id}"]['wage']):
-            if G.nodes[f"Household_{household_id}"]['wage'] > minimum_wage:
-                G.nodes[f"Household_{household_id}"]['wage'] = G.nodes[f"Household_{household_id}"]['wage'] * (1 - random.uniform(0,0.25))
+              (G.nodes[f"Firm_{firm_id}"]["wage"] > G.nodes[f"Household_{household_id}"]["wage"]):
+            if G.nodes[f"Household_{household_id}"]["wage"] > minimum_wage:
+                G.nodes[f"Household_{household_id}"]["wage"] = G.nodes[f"Household_{household_id}"]["wage"] * (1 - random.uniform(0,0.25))
                 G.add_edge(f"Household_{household_id}",f"Firm_{firm_id}")
-                G.nodes[f"Firm_{firm_id}"]['free_position'] -= 1
-                G.nodes[f"Household_{household_id}"]['wage'] = G.nodes[f"Firm_{firm_id}"]['wage']
+                G.nodes[f"Firm_{firm_id}"]["free_position"] -= 1
+                G.nodes[f"Household_{household_id}"]["wage"] = G.nodes[f"Firm_{firm_id}"]["wage"]
         else:
             # Search a job position
             labors_part_job_position = G.nodes[f"Household_{household_id}"]["labors"]
             # effort = len(labors_part_job_position)
             effort = 1
             for firm_id in random.sample(labors_part_job_position, effort):
-                if G.nodes[f"Firm_{firm_id}"]['liquidity'] < 0:
+                if G.nodes[f"Firm_{firm_id}"]["liquidity"] < 0:
                     G.remove_edges_from(list(G.edges(f"Firm_{firm_id}")))
                 elif G.degree(f"Household_{household_id}") > 0 and \
                     G.nodes[f"Firm_{firm_id}"]["free_position"] > 0 and \
-                    ((G.nodes[f"Firm_{firm_id}"]['wage']) > (G.nodes[f"Household_{household_id}"]['wage'])):
+                    ((G.nodes[f"Firm_{firm_id}"]["wage"]) > (G.nodes[f"Household_{household_id}"]["wage"])):
                     firm_of_labor_link = list(G.edges(f"Household_{household_id}"))
                     G.remove_edges_from(firm_of_labor_link)
                     G.nodes[firm_of_labor_link[0][1]]["free_position"] += 1
                     G.add_edge(f"Household_{household_id}",f"Firm_{firm_id}")
-                    G.nodes[f"Firm_{firm_id}"]['free_position'] -= 1
-                    G.nodes[f"Household_{household_id}"]['wage'] = G.nodes[f"Firm_{firm_id}"]['wage']
+                    G.nodes[f"Firm_{firm_id}"]["free_position"] -= 1
+                    G.nodes[f"Household_{household_id}"]["wage"] = G.nodes[f"Firm_{firm_id}"]["wage"]
 
         
 
@@ -262,12 +264,15 @@ for step in range(num_steps):
             # # Adjust production
             # G.nodes[f"Firm_{firm_id}"]["recent_production"] = phi * G.nodes[f"Firm_{firm_id}"]["recent_demand"]
             # # New production
-            G.nodes[f"Firm_{firm_id}"]['production'] += _lambda*(G.degree(f"Firm_{firm_id}"))
-            G.nodes[f"Firm_{firm_id}"]['reserve'] += _lambda*(G.degree(f"Firm_{firm_id}"))
+            G.nodes[f"Firm_{firm_id}"]["production"] += _lambda*(G.degree(f"Firm_{firm_id}"))
+            G.nodes[f"Firm_{firm_id}"]["reserve"] += _lambda*(G.degree(f"Firm_{firm_id}"))
+
+            
+
             
             if firm_id == 1:  
-                attributes_to_print = list(G.nodes[f'Firm_{firm_id}'].keys())
-                values_to_print = [G.nodes[f'Firm_{firm_id}'][attr] for attr in attributes_to_print]
+                attributes_to_print = list(G.nodes[f"Firm_{firm_id}"].keys())
+                values_to_print = [G.nodes[f"Firm_{firm_id}"][attr] for attr in attributes_to_print]
                 column_names = ','.join(attributes_to_print)
                 values_to_print.append(G.degree(f'Firm_{firm_id}'))
                 values_to_print.append(step)
@@ -291,40 +296,40 @@ for step in range(num_steps):
             # Adjust production
             if G.degree(f"Firm_{firm_id}") > 1:
                 # reset state
-                G.nodes[f"Firm_{firm_id}"]['free_position'] = 0
+                G.nodes[f"Firm_{firm_id}"]["free_position"] = 0
 
 
-                firm_production_adj_part = G.nodes[f"Firm_{firm_id}"]['production']
-                firm_price_adj_part = G.nodes[f"Firm_{firm_id}"]['price']
-                firm_low_production_adj_part = G.nodes[f"Firm_{firm_id}"]['production_boundary'][0]
-                firm_high_production_adj_part = G.nodes[f"Firm_{firm_id}"]['production_boundary'][1]
-                firm_low_price_adj_part = G.nodes[f"Firm_{firm_id}"]['price_boundary'][0]
-                firm_high_price_adj_part = G.nodes[f"Firm_{firm_id}"]['price_boundary'][1]
+                firm_production_adj_part = G.nodes[f"Firm_{firm_id}"]["production"]
+                firm_price_adj_part = G.nodes[f"Firm_{firm_id}"]["price"]
+                firm_low_production_adj_part = G.nodes[f"Firm_{firm_id}"]["production_boundary"][0]
+                firm_high_production_adj_part = G.nodes[f"Firm_{firm_id}"]["production_boundary"][1]
+                firm_low_price_adj_part = G.nodes[f"Firm_{firm_id}"]["price_boundary"][0]
+                firm_high_price_adj_part = G.nodes[f"Firm_{firm_id}"]["price_boundary"][1]
                 probability_Calvo = random.random()
                 if firm_production_adj_part > firm_high_production_adj_part:
                     fire_adj_part = random.choice(list(G.neighbors(f"Firm_{firm_id}")))
                     # Fire with one month delay
-                    if G.nodes[f"Firm_{firm_id}"]['free_position'] == 0:
-                        G.nodes[f"Firm_{firm_id}"]['free_position'] -= 1
+                    if G.nodes[f"Firm_{firm_id}"]["free_position"] == 0:
+                        G.nodes[f"Firm_{firm_id}"]["free_position"] -= 1
                     if probability_Calvo > 1-theta:
                         if firm_price_adj_part > firm_high_price_adj_part:
-                            G.nodes[f"Firm_{firm_id}"]['price'] = firm_price_adj_part * (1 - random.uniform(0,nu))
+                            G.nodes[f"Firm_{firm_id}"]["price"] = firm_price_adj_part * (1 - random.uniform(0,nu))
                         elif firm_price_adj_part < firm_low_price_adj_part:
-                            G.nodes[f"Firm_{firm_id}"]['price'] = firm_price_adj_part * (1 + random.uniform(0,nu))
+                            G.nodes[f"Firm_{firm_id}"]["price"] = firm_price_adj_part * (1 + random.uniform(0,nu))
                 elif firm_production_adj_part < firm_low_production_adj_part:
                     # Hiring immediately
-                    if G.nodes[f"Firm_{firm_id}"]['free_position'] == 0:
-                        G.nodes[f"Firm_{firm_id}"]['free_position'] += 1
-                    # elif G.nodes[f"Firm_{firm_id}"]['free_position'] == 1:
-                    if G.nodes[f'Firm_{firm_id}']['wage']>minimum_wage and G.nodes[f'Firm_{firm_id}']['wage']<maximum_wage:
-                        G.nodes[f'Firm_{firm_id}']['wage'] = G.nodes[f'Firm_{firm_id}']['wage'] * (1 + random.uniform(0,delta))
+                    if G.nodes[f"Firm_{firm_id}"]["free_position"] == 0:
+                        G.nodes[f"Firm_{firm_id}"]["free_position"] += 1
+                    # elif G.nodes[f"Firm_{firm_id}"]["free_position"] == 1:
+                    if G.nodes[f"Firm_{firm_id}"]["wage"]>minimum_wage and G.nodes[f"Firm_{firm_id}"]["wage"]<maximum_wage:
+                        G.nodes[f"Firm_{firm_id}"]["wage"] = G.nodes[f"Firm_{firm_id}"]["wage"] * (1 + random.uniform(0,delta))
                         G = update_h_wages(G,firm_id)
                     G = hiring_by_firm(G, firm_id)
                     if probability_Calvo > 1-theta:
                         if firm_price_adj_part > firm_high_price_adj_part:
-                            G.nodes[f"Firm_{firm_id}"]['price'] = firm_price_adj_part * (1 - random.uniform(0,nu))
+                            G.nodes[f"Firm_{firm_id}"]["price"] = firm_price_adj_part * (1 - random.uniform(0,nu))
                         elif firm_price_adj_part < firm_low_price_adj_part:
-                            G.nodes[f"Firm_{firm_id}"]['price'] = firm_price_adj_part * (1 + random.uniform(0,nu))
+                            G.nodes[f"Firm_{firm_id}"]["price"] = firm_price_adj_part * (1 + random.uniform(0,nu))
 
         # Report about daily unemployement
         if graph_state == True:
@@ -343,76 +348,76 @@ for step in range(num_steps):
 
         # Consumption
         for household_id in range(num_households):
-            connected_firm = G.nodes[f'Household_{household_id}']["labors"]
+            connected_firm = G.nodes[f"Household_{household_id}"]["labors"]
             total_price = 0
             for firm_id in connected_firm:
-                total_price += G.nodes[f'Firm_{firm_id}']['price']
+                total_price += G.nodes[f"Firm_{firm_id}"]["price"]
             avg_price = total_price / len(connected_firm)
             # We did it for uniform distribution of sellers
             sample_firms = random.sample(connected_firm, len(connected_firm))
             # Buy things
             
-            demand = min(((G.nodes[f'Household_{household_id}']['liquidity'] / avg_price) ** 0.9),\
-                        (G.nodes[f'Household_{household_id}']['liquidity'] / avg_price)) / num_days
+            demand = min(((G.nodes[f"Household_{household_id}"]["liquidity"] / avg_price) ** 0.9),\
+                        (G.nodes[f"Household_{household_id}"]["liquidity"] / avg_price)) / num_days
             for firm_id in sample_firms:
 
 
 
                 # recent demand
-                G.nodes[f'Firm_{firm_id}']['demand'] += demand
+                G.nodes[f"Firm_{firm_id}"]['demand'] += demand
 
 
 
-                consumption = demand * G.nodes[f'Firm_{firm_id}']['price']
+                consumption = demand * G.nodes[f"Firm_{firm_id}"]["price"]
                 if consumption > 0:
-                    firm_production = G.nodes[f'Firm_{firm_id}']['reserve']
+                    firm_production = G.nodes[f"Firm_{firm_id}"]["reserve"]
                     if firm_production > 0:
-                        if G.nodes[f'Firm_{firm_id}']['reserve'] >= demand:
-                            if G.nodes[f'Household_{household_id}']['liquidity'] > consumption:
-                                G.nodes[f'Household_{household_id}']['liquidity'] -= consumption
-                                G.nodes[f'Firm_{firm_id}']['reserve'] -= demand
-                                G.nodes[f'Firm_{firm_id}']['liquidity'] += consumption
+                        if G.nodes[f"Firm_{firm_id}"]["reserve"] >= demand:
+                            if G.nodes[f"Household_{household_id}"]["liquidity"] > consumption:
+                                G.nodes[f"Household_{household_id}"]["liquidity"] -= consumption
+                                G.nodes[f"Firm_{firm_id}"]["reserve"] -= demand
+                                G.nodes[f"Firm_{firm_id}"]["liquidity"] += consumption
                                 demand = 0
-                            elif G.nodes[f'Household_{household_id}']['liquidity'] < consumption:
-                                G.nodes[f'Firm_{firm_id}']['reserve'] -= demand
-                                G.nodes[f'Firm_{firm_id}']['liquidity'] += G.nodes[f'Household_{household_id}']['liquidity']
-                                G.nodes[f'Household_{household_id}']['liquidity'] = 0
+                            elif G.nodes[f"Household_{household_id}"]["liquidity"] < consumption:
+                                G.nodes[f"Firm_{firm_id}"]["reserve"] -= demand
+                                G.nodes[f"Firm_{firm_id}"]["liquidity"] += G.nodes[f"Household_{household_id}"]["liquidity"]
+                                G.nodes[f"Household_{household_id}"]["liquidity"] = 0
                                 demand = 0
-                        elif G.nodes[f'Firm_{firm_id}']['reserve'] < demand:
-                            if G.nodes[f'Household_{household_id}']['liquidity'] > consumption:
-                                share_of_consumption = G.nodes[f'Firm_{firm_id}']['reserve'] * G.nodes[f'Firm_{firm_id}']['price']
-                                G.nodes[f'Household_{household_id}']['liquidity'] -= share_of_consumption
-                                G.nodes[f'Firm_{firm_id}']['reserve'] = 0
-                                G.nodes[f'Firm_{firm_id}']['liquidity'] += share_of_consumption
-                                demand -= (share_of_consumption / G.nodes[f'Firm_{firm_id}']['price'])
-                            elif G.nodes[f'Household_{household_id}']['liquidity'] < consumption:
-                                share_of_demand = G.nodes[f'Household_{household_id}']['liquidity'] / G.nodes[f'Firm_{firm_id}']['price']
-                                if G.nodes[f'Firm_{firm_id}']['reserve'] > share_of_demand:
-                                    G.nodes[f'Firm_{firm_id}']['reserve'] -= share_of_demand
-                                    G.nodes[f'Firm_{firm_id}']['liquidity'] += G.nodes[f'Household_{household_id}']['liquidity']
-                                    G.nodes[f'Household_{household_id}']['liquidity'] = 0
+                        elif G.nodes[f"Firm_{firm_id}"]["reserve"] < demand:
+                            if G.nodes[f"Household_{household_id}"]["liquidity"] > consumption:
+                                share_of_consumption = G.nodes[f"Firm_{firm_id}"]["reserve"] * G.nodes[f"Firm_{firm_id}"]["price"]
+                                G.nodes[f"Household_{household_id}"]["liquidity"] -= share_of_consumption
+                                G.nodes[f"Firm_{firm_id}"]["reserve"] = 0
+                                G.nodes[f"Firm_{firm_id}"]["liquidity"] += share_of_consumption
+                                demand -= (share_of_consumption / G.nodes[f"Firm_{firm_id}"]["price"])
+                            elif G.nodes[f"Household_{household_id}"]["liquidity"] < consumption:
+                                share_of_demand = G.nodes[f"Household_{household_id}"]["liquidity"] / G.nodes[f"Firm_{firm_id}"]["price"]
+                                if G.nodes[f"Firm_{firm_id}"]["reserve"] > share_of_demand:
+                                    G.nodes[f"Firm_{firm_id}"]["reserve"] -= share_of_demand
+                                    G.nodes[f"Firm_{firm_id}"]["liquidity"] += G.nodes[f"Household_{household_id}"]["liquidity"]
+                                    G.nodes[f"Household_{household_id}"]["liquidity"] = 0
                                     demand = 0
-                                elif G.nodes[f'Firm_{firm_id}']['reserve'] < share_of_demand:
-                                    share_of_consumption = G.nodes[f'Firm_{firm_id}']['reserve'] * G.nodes[f'Firm_{firm_id}']['price']
-                                    G.nodes[f'Household_{household_id}']['liquidity'] -= share_of_consumption
-                                    G.nodes[f'Firm_{firm_id}']['reserve'] = 0
-                                    G.nodes[f'Firm_{firm_id}']['liquidity'] += share_of_consumption
-                                    demand -= (share_of_consumption / G.nodes[f'Firm_{firm_id}']['price'])
+                                elif G.nodes[f"Firm_{firm_id}"]["reserve"] < share_of_demand:
+                                    share_of_consumption = G.nodes[f"Firm_{firm_id}"]["reserve"] * G.nodes[f"Firm_{firm_id}"]["price"]
+                                    G.nodes[f"Household_{household_id}"]["liquidity"] -= share_of_consumption
+                                    G.nodes[f"Firm_{firm_id}"]["reserve"] = 0
+                                    G.nodes[f"Firm_{firm_id}"]["liquidity"] += share_of_consumption
+                                    demand -= (share_of_consumption / G.nodes[f"Firm_{firm_id}"]["price"])
                     else:
                         # print(f"Firm_{firm_id}: production is zero")
-                        # print(G.nodes[f'Firm_{firm_id}'])
+                        # print(G.nodes[f"Firm_{firm_id}"])
                         # input()
                         break
                 else:
                     # print(f"Household_{household_id}:h consumption is zero")
-                    # print(G.nodes[f'Household_{household_id}'])
+                    # print(G.nodes[f"Household_{household_id}"])
                     # input()
                     break
             
             if demand == 0:
-                G.nodes[f'Household_{household_id}']['recent_demand_status'] = "complete"
+                G.nodes[f"Household_{household_id}"]['recent_demand_status'] = "complete"
             else:
-                G.nodes[f'Household_{household_id}']['recent_demand_status'] = "uncomplete"
+                G.nodes[f"Household_{household_id}"]['recent_demand_status'] = "uncomplete"
 
 
 
@@ -427,7 +432,7 @@ for step in range(num_steps):
         cons_liq = liquidity
         liquidity = G.nodes[f"Firm_{firm_id}"]["liquidity"]
         labors = list(G.neighbors(f"Firm_{firm_id}"))
-        wage = G.nodes[f"Firm_{firm_id}"]['wage']
+        wage = G.nodes[f"Firm_{firm_id}"]["wage"]
         # print(f"liquidity of Firm_{firm_id}: {liquidity}")
         if liquidity > 0:
             for labor in labors:
@@ -458,10 +463,10 @@ for step in range(num_steps):
     for firm_id in range(num_firms):
         # check recent things count
         G.nodes[f"Firm_{firm_id}"]["recent_labors"] = G.degree(f"Firm_{firm_id}")
-        while G.nodes[f"Firm_{firm_id}"]['free_position'] < 0:
+        while G.nodes[f"Firm_{firm_id}"]["free_position"] < 0:
             fire_adj_part = random.choice(list(G.neighbors(f"Firm_{firm_id}")))
             G.remove_edge(f"Firm_{firm_id}", fire_adj_part)
-            G.nodes[f"Firm_{firm_id}"]['free_position'] += 1
+            G.nodes[f"Firm_{firm_id}"]["free_position"] += 1
 
             
 
