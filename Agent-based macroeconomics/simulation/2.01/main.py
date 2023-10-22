@@ -162,8 +162,8 @@ for step in range(num_steps):
 
     # Adjust wage households
     for firm_id in range(num_firms):
+        wage = G.nodes[f"Firm_{firm_id}"]["wage"]
         if wage > minimum_wage and wage < maximum_wage:
-            wage = G.nodes[f"Firm_{firm_id}"]["wage"]
             G.nodes[f"Firm_{firm_id}"]["recent_wage"] = wage
             if G.nodes[f"Firm_{firm_id}"]["free_position"] > 0:
                 # this means firm is unsuccessful in hiring
@@ -181,8 +181,9 @@ for step in range(num_steps):
         G.nodes[f"Firm_{firm_id}"]["recent_demand"] = G.nodes[f"Firm_{firm_id}"]['demand']
         G.nodes[f"Firm_{firm_id}"]["demand"] = 0
         # update recent production
-        G.nodes[f"Firm_{firm_id}"]["recent_production"] = G.nodes[f"Firm_{firm_id}"]["production"]
-        G.nodes[f"Firm_{firm_id}"]["production"] = 0
+        # G.nodes[f"Firm_{firm_id}"]["recent_production"] = G.nodes[f"Firm_{firm_id}"]["production"]
+        G.nodes[f"Firm_{firm_id}"]["recent_production"] = G.nodes[f"Firm_{firm_id}"]["reserve"]
+        # G.nodes[f"Firm_{firm_id}"]["production"] = 0
         # Adjust inventory(production) boundary
         production_boundary_adj_up = phi_up * G.nodes[f"Firm_{firm_id}"]["recent_demand"]
         production_boundary_adj_down = phi_down * G.nodes[f"Firm_{firm_id}"]["recent_demand"]
@@ -193,7 +194,8 @@ for step in range(num_steps):
         wage_price_adj = G.nodes[f"Firm_{firm_id}"]["wage"]
         # # calculation of marginal cost by difference of labor costs respect to last month
         dc_price_adj = (G.degree(f"Firm_{firm_id}") * wage_price_adj) - (G.nodes[f"Firm_{firm_id}"]["recent_labors"] * recent_wage_price_adj)
-        dq_price_adj = G.nodes[f"Firm_{firm_id}"]["production"] - G.nodes[f"Firm_{firm_id}"]["recent_production"]
+        # dq_price_adj = G.nodes[f"Firm_{firm_id}"]["production"] - G.nodes[f"Firm_{firm_id}"]["recent_production"]
+        dq_price_adj = G.nodes[f"Firm_{firm_id}"]["reserve"] - G.nodes[f"Firm_{firm_id}"]["recent_production"]
         if dq_price_adj != 0 and dc_price_adj != 0:
             price_up_adj = thi_up * (dc_price_adj/dq_price_adj)
             price_down_adj = thi_down * (dc_price_adj/dq_price_adj)
@@ -264,10 +266,10 @@ for step in range(num_steps):
             # # Adjust production
             # G.nodes[f"Firm_{firm_id}"]["recent_production"] = phi * G.nodes[f"Firm_{firm_id}"]["recent_demand"]
             # # New production
-            G.nodes[f"Firm_{firm_id}"]["production"] += _lambda*(G.degree(f"Firm_{firm_id}"))
+            # G.nodes[f"Firm_{firm_id}"]["production"] += _lambda*(G.degree(f"Firm_{firm_id}"))
             G.nodes[f"Firm_{firm_id}"]["reserve"] += _lambda*(G.degree(f"Firm_{firm_id}"))
 
-            
+
 
             
             if firm_id == 1:  
@@ -299,7 +301,8 @@ for step in range(num_steps):
                 G.nodes[f"Firm_{firm_id}"]["free_position"] = 0
 
 
-                firm_production_adj_part = G.nodes[f"Firm_{firm_id}"]["production"]
+                # firm_production_adj_part = G.nodes[f"Firm_{firm_id}"]["production"]
+                firm_production_adj_part = G.nodes[f"Firm_{firm_id}"]["reserve"]
                 firm_price_adj_part = G.nodes[f"Firm_{firm_id}"]["price"]
                 firm_low_production_adj_part = G.nodes[f"Firm_{firm_id}"]["production_boundary"][0]
                 firm_high_production_adj_part = G.nodes[f"Firm_{firm_id}"]["production_boundary"][1]
@@ -478,7 +481,7 @@ for step in range(num_steps):
     total_production = 0
     total_reservation = 0
     for firm_id in range(num_firms):
-        total_production += G.nodes[f"Firm_{firm_id}"]["production"]
+        # total_production += G.nodes[f"Firm_{firm_id}"]["production"]
         total_reservation += G.nodes[f"Firm_{firm_id}"]["reserve"]
     total_production_firm_test.append(total_production)
     
