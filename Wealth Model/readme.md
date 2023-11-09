@@ -9,9 +9,11 @@ After all the graphs have been created, the code performs a series of trades on 
 
 Finally, the code uses the matplotlib library to plot a histogram of the 'wallet' values. This gives a visual representation of the distribution of 'wallet' values across all nodes in all graphs after the trades have been performed. The size of each node in the plot is proportional to its 'wallet' value, so nodes with larger 'wallet' values appear larger in the plot.
 
-This code provides a simple but powerful simulation of trading in a network. By adjusting the number of nodes, the number of graphs, and the number of trading steps, you can explore different scenarios and see how the distribution of 'wallet' values changes over time. The use of the NetworkX library makes it easy to create and manipulate the graphs, while the matplotlib library provides a convenient way to visualize the results. I hope this explanation helps you understand the code better! If you have any more questions, feel free to ask. 😊
+This code provides a simple but powerful simulation of trading in a network. By adjusting the number of nodes, the number of graphs, and the number of trading steps, you can explore different scenarios and see how the distribution of 'wallet' values changes over time. The use of the NetworkX library makes it easy to create and manipulate the graphs, while the matplotlib library provides a convenient way to visualize the results.
+
+In this figure you can see distribution of wealth which is like patero wealth distribution:
 <p align="center">
-  <img src="https://github.com/mahdikohan/complexityEconomics/blob/5955d0e58ab01f00695afb6b68b10b8f3211935f/agent%20based%20macroeconomics/images/the%20circular%20flow.png" alt="Lorenz attractor" width="600">
+  <img src="https://github.com/mahdikohan/complexityEconomics/blob/main/Wealth%20Model/images/Figure_1.png" alt="wealth distribution" width="600">
 </p>
 <p align="center">Figure 1: A circular flow of income is an economic model</p>
 
