@@ -152,7 +152,7 @@ $$
 ## Dependencies
 
 This project is powered by the NetworkX package. NetworkX is a Python package used for the creation, manipulation, and study of the structure, dynamics, and functions of complex networks.
-! URL_TO_LOGO https://networkx.org/_static/networkx_logo.svg
+![NetworkX logo](https://networkx.org/_static/networkx_logo.svg)
 
 ## References
 [1] Lengnick, M. (2013). Agent-based macroeconomics: A baseline model. Journal of Economic Behavior & Organization, 86, 102-120. https://doi.org/10.1016/j.jebo.2012.12.021
