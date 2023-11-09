@@ -15,6 +15,6 @@ In this figure you can see distribution of wealth which is result of histogram p
 <p align="center">
   <img src="https://github.com/mahdikohan/complexityEconomics/blob/main/Wealth%20Model/images/Figure_1.png" alt="wealth distribution" width="600">
 </p>
-<p align="center">Figure 1: A circular flow of income is an economic model</p>
+<p align="center">Figure 1: Histogram plot of wallets values in all nodes</p>
 
 ## The model
