@@ -19,7 +19,7 @@ In this figure you can see distribution of wealth which is result of histogram p
 
 You can see each group as a graph in figure 2. I tried to relate graph node sizes with nodes wallet values
 <p align="center">
-  <img src="https://github.com/mahdikohan/complexityEconomics/blob/main/Wealth%20Model/images/Members_group_all.png" alt="groups" width="600">
+  <img src="https://github.com/mahdikohan/complexityEconomics/blob/main/Wealth%20Model/images/Members_group_all.png" alt="groups" width="800">
 </p>
 <p align="center">Figure 2: Group of nodes which trade with each other</p>
 
