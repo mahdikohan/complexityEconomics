@@ -152,6 +152,7 @@ $$
 ## Dependencies
 
 This project is powered by the NetworkX package. NetworkX is a Python package used for the creation, manipulation, and study of the structure, dynamics, and functions of complex networks.
+
 ![NetworkX logo](https://networkx.org/_static/networkx_logo.svg)
 
 ## References
