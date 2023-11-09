@@ -11,7 +11,7 @@ Finally, the code uses the matplotlib library to plot a histogram of the 'wallet
 
 This code provides a simple but powerful simulation of trading in a network. By adjusting the number of nodes, the number of graphs, and the number of trading steps, you can explore different scenarios and see how the distribution of 'wallet' values changes over time. The use of the NetworkX library makes it easy to create and manipulate the graphs, while the matplotlib library provides a convenient way to visualize the results.
 
-In this figure you can see distribution of wealth which is like patero wealth distribution:
+In this figure you can see distribution of wealth which is result of histogram plot of wallets:
 <p align="center">
   <img src="https://github.com/mahdikohan/complexityEconomics/blob/main/Wealth%20Model/images/Figure_1.png" alt="wealth distribution" width="600">
 </p>
